@@ -22,7 +22,7 @@ def monsterSetup():
 			'Mad Dog','Large Spider','Black Cat','Man Eating Plant','Hydra','Gelatinous Cube',
 			'Giant Centipede','Giant Rat','Shadow']
 	monsterhp=[6,5,4,6,6,5,5,4,5,4,4,5,6,4,5,1,1,2,3,2,1,3,3,3,3,2,3,2,1,3,2,1,2,2]
-	monsterhm=[12,10,8,12,12,10,10,8,10,8,8,10,12,8,10,2,2,4,6,4,2,6,6,6,4,6,4,2,6,4,2,4,4]
+	monsterhm=[12,10,8,12,12,10,10,8,10,8,8,10,12,8,10,2,2,4,6,4,2,6,6,6,6,4,6,4,2,6,4,2,4,4]
 	monsterName=" "
 	monsterHitPower=0
 	monsterStrength=0
@@ -31,7 +31,7 @@ def monsterSetup():
 		info[0].append(monster[loop])
 		info[1].append(monsterhp[loop])
 		info[2].append(monsterhm[loop])
-		print(f'{info[0][loop]} -- {info[1][loop]} -- {info[2][loop]}\n')
+#		print(f'{info[0][loop]} -- {info[1][loop]} -- {info[2][loop]}\n')
 	return(info)
 	
 monsterInfo=monsterSetup()
