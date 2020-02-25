@@ -1,6 +1,27 @@
 a = ?
 b = ?
-playerName = F$
+playerName = A$
 playerGold = 
 playerHP = H1
 difficulty = PL
+
+A$(50)	= playerName
+D$(1) 	= ?
+F$(1)		= ?
+M1$(1)	= ?
+MS$(17)	= monster
+
+A(9,9)	= ?
+B(9,9)	= ?
+DY		= ?
+MD		= ?
+MA		= ?
+CA		= ?
+G		= playerGold
+M1		= ?
+K		= ?
+HI		= temp variable?
+PL		= difficulty
+H1		= playerHP
+BB		= temp variable for delay loop
+L1		= ? Level maybe? (see line 740 to ?

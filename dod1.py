@@ -2,7 +2,7 @@
 # Conversion in process
 import random
 import tools
-from os import system
+from os import system, name
 
 a=tools.createGrid(9,9)
 b=tools.createGrid(9,9)
@@ -10,6 +10,7 @@ b=tools.createGrid(9,9)
 playerName=""
 playerGold=500
 playerHP=0
+playerLevel=0
 
 monster=['Large Dragon','Hideous Ghoul','Lizard Man','Manticore','Purple Worm','Deadly Cobra',
 			'Mad Elf','Clay Man','Hairy Beast','Mad Dwarf','Zombie','Berserker','Giant Scorpion',
@@ -29,7 +30,10 @@ def rnd():
 	return random.random()
 
 def cls():
-	_ = system('clear')
+	if name == 'nt':
+		_ = system('cls')
+	else:
+		_ = system('clear')
 	return
 	
 def showIntro():
@@ -54,7 +58,6 @@ def showIntro():
 	print("\nYou carry a magic sword and "+str(playerGold)+" pieces with you.")
 	print("Your 'hit point' value is "+str(playerHP)+".")
 	print("If it reaches zero, you will die... So be careful!")
-#	fillArray()							#gosub 500
 	print("You have arrived at...")
 	print("The Dungeon of Danger... Level 2")
 	print(" ")
@@ -74,32 +77,18 @@ def getName():
 # End of getName
 
 def fillArray(col,row):						#subroutine at 500
-#	global a
-#	global b
 	grid=tools.createGrid(col,row)
 	n=0
 	for y in range(1,col):
-#	for y in range(len(a[0])):
 		for x in range(1,row):
-#		for x in range(len(a[1])):
-#			print(a)
-#			print(str(x)+":"+str(y))
-#			a[y][x] = int(rnd()*7+1)
-#			b[y][x] = int(rnd()*7+1)
 			i=tools.getIndex(x,y,col)
 			grid[i]=int(rnd()*7+1)
-#			grid[x][y] = int(rnd()*7+1)
 		# next x
 	# next y
 	h=int(rnd()*3+1)
 	for n in range(1,h+1):
 		x=int(rnd()*col)
 		y=int(rnd()*row)
-#		p=int(rnd()*8+1)
-#		w=int(rnd()*8+1)
-#		print("x= "+str(x)+" y= "+str(y)+" p= "+str(p)+" w= "+str(w))
-#		a[y][x]=8
-#		b[w][p]=8
 		i=tools.getIndex(x,y,col)
 		grid[i]=8
 	# next n
@@ -107,10 +96,6 @@ def fillArray(col,row):						#subroutine at 500
 	for n in range(1,s+1):
 		x=int(rnd()*8+1)
 		y=int(rnd()*8+1)
-#		p=int(rnd()*8+1)
-#		w=int(rnd()*8+1)
-#		a[y][x]=9
-#		b[w][p]=9
 		i=tools.getIndex(x,y,col)
 		grid[i]=9
 	# next n
@@ -125,6 +110,78 @@ def emptyChamber():		# 2100-2200
 		print("\nYou are in a cold and dark, but empty, chamber.")
 	return
 
+def drinkBlackPotion():
+	h3=int(rnd()*6+1)*difficulty	
+#	playerHP=h1-h3
+	print("You feel a little funny...")
+#	if playerHP <= 0:
+#		return
+	print("\n\nIt was a black magic potion...")
+	print(f'Which decreased your hit points by {h3} points.')
+	return(h3)
+
+def drinkWhitePotion():
+	h3=int(rnd()*10/difficulty+1)+(6/difficulty)
+	print(f'It was a white magic potion, which increased your hit points by {h3}!')
+	return(h3)
+	
+def hiddenVial():		# 4210
+	global playerHP
+	print("You look around...")
+	v=int(rnd()*7+1)
+	if v<=5:
+		return
+	print("On the ground, at your feet, is a vial.")
+	print("You pick up the vial and see that it contains a milky liquid.")
+	print(" ")
+	print("Would you like a drink?")
+	drink=str(input("Enter (Y)es or (N)o >"))
+	dl=int(rnd()*6+1)
+	if upper(drink) != "Y":
+		return
+	print("\n\n")
+	print("You take a drink...")
+	if dl >= 3:			# 4440
+		points=drinkWhitePotion()
+		playerHP=playerHP+points
+		return
+	if dl == 2:			# 4480
+		print("The liquid has no effect on you.")
+		return
+	points=drinkBlackPotion()
+	playerHP=playerHP-points
+	return			# 4490
+
+def somethingJumps():	# 5290
+	print("Suddenly, something jumps in front of you!")
+	return
+	
+def giantSpider():		# 5170
+	somethingJumps()	# Surely this could have been done better
+	hp=6
+	hm=12
+	print("It's a huge man-sized crawling spider!")
+	print("... and ...")
+	askFight()			# GOTO 4540 | Ugh. askFight needs to change
+	return
+	
+def mrWizard():			# 5040
+	global playerGold
+	global playerHP
+	
+	somethingJumps()	# GOSUB 5290
+	print("Halt! I am the Ancient Wizard!")
+	print("I will not harm you.")
+	print(" ")
+	giveGold=int(rnd()*300+1)+100
+	playerGold=playerGold+giveGold
+	print(f'I give you... {giveGold} gold pieces out of goodwill and friendship.')
+	print(" ")
+	giveHP=int(rnd()*10/difficulty+1)+(6/difficulty)
+	playerHP = playerHP + giveHP
+	print(f'Also, I will increase your hit points by {giveHP}.')
+	return
+	
 def hiddenCavern():		#4060-
 	print("You stumbled onto...")
 	print("A hidden cavern!")
@@ -139,11 +196,11 @@ def hiddenCavern():		#4060-
 	print("you hear a noise off in the distance.")
 	print("Cautiously, you walk towards the sound.")
 	w=int(rnd()*4+1)
-	if hi<playerHP:
-		doSomething()	# GOTO 4180
-	if w==1:
+#	if hi<playerHP:
+#		doSomething()	# GOTO 4180
+	if (w==1) and (hi>=playerHP):	# This should satisfy above IF
 		mrWizard()		# GOTO 5040
-	if w==2:
+	if w==2:			# This is 4180
 		giantSpider()	# GOTO 5170
 	if (w==4) and (lvl==2):
 		deepDarkPool()	# GOTO 5720
@@ -164,13 +221,13 @@ def doAttack():		# Line 4600
 def monsterAttack():	# Line 4780
 	return
 
-def askFight():		# Line 4510
+def askFight(mname,mhp,mstr):		# Line 4510
 	print(" ")
 	w=int(rnd()*4+1)
 	if w<=2:
-		return		# Goto 4540
+		return				# Goto 4540
 	else:
-		monsterAttacks()	# GOSUb 4780
+		monsterAttacks()	# GOSUB 4780
 	if h1<=0:
 		return
 	print("\nWill you (F)ight or (R)un? ")
@@ -199,7 +256,7 @@ def chamberLurking():	# Line 3600
 	print("... In this chamber...")
 	print(".... Beware!")
 	print(f'It is a {monsterName}!')
-	askFight()	# Goto 4510
+	askFight(monsterName,monsterHitPower,MonsterStrength)	# Goto 4510
 	
 ############ Main Loop ###########
 showIntro()
