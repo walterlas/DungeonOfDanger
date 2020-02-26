@@ -22,7 +22,8 @@ difficulty=1
 #pname=0
 #php=1
 #pgold=2
-plevel=3
+level=3
+haveKey = 0
 
 def delay(seconds):
 	sleep(seconds)
@@ -100,7 +101,120 @@ def pausePrint():	# Line 4500 most useless subroutine yet
 	delay(3)
 	print("\n")
 	return
+# End of pausePrint():
+
+def monsterAttack():# Line 4780
+	print("\n")
+	w = int(rnd()*7+1)
+	print("...... It Attacks you")
+	if w <= 2:		# GOTO 5350
+		delay(2)
+		print("But....... it misses.")
+		delay(2)
+	else:
+		w = int(rnd()*6+1)
+		if w >= 3:
+			n=int(rnd()*player.hp*difficulty+1)
+		else:
+			n=int(rnd()*player.hp/level+1)+int(rnd()*player.hp/level+1)
+		if monster.hm <= 2:
+			n=1
+		player.hp = player.hp -n
+		delay(2)
+		if player.hp <= 0:
+			return
+		print(f'And it does {n} hit-points of damage')
+		print(" ")
+		print(f'You have... {player.hp} hit-points left.')
+		print(" ")
+	return
+# End of monsterAttack
+
+def getKey():		# Line 3110
+	haveKey == 1
+	print("\nYou look to the ground......")
+	print("and find the Enchanted Key!")
+	delay(2)
+	return
+# End of getKey
+
+def checkKey():		# Line 3190
+	if ca == cb:
+		getKey()	# GOTO 3110
+	returnn
+# End of checkKey
+
+def deadMonster():	# Line 4890
+	printDelay()
+	print(f'You have killed the {monster.name}')
+	print("\n")
+	if (aint < 6) and (aint != 2):
+		if level == 1:
+			index = getIndex(c,d,9)
+			b[index] = 1
+		else:
+			index = getIndex(c,d,9)
+			a[index] = 1
+	gold = 500
+	if aint >= 6:
+		gold = 250
+	givegold = int(rnd()*gold/level+1)+75
+	if aint == 2:
+		givegold=givegold*2
+	player.gold = player.gold+givegold
+	delay(2)
+	print("You search the area....")
+	delay(2)
+	print(f'and find ... {givegold} gold pieces')
+	ca=ca+1
+	if haveKey != 1:
+		if level == 1:
+			checkKey()	# GOTO 3190
+		else:
+			getKey()	# GOTO 3110
+	return
+#End of deadMonster
+
+def doBattle():		# Line 4530
+	battle = True
+	delay(2)
+	while battle:
+		monsterAttack()	# GOSUB 4780
+		if player.hp <= 0:
+			battle = False
+		print(" ")
+		f=upper(input("Will you (F)ight or (R)un? "))
+		cls()
+		if f == 'F':
+			delay(2)
+			print(f'You attack the... {monster.name}')
+			delay(2)
+			print("With a swing of your sword")
+			n=int(rnd()*5+1)+int(rnd()*ca/2+1)
+			monter.hm = monster.hm - n
+			if monster.hm <= 0:
+				deadMonster()	# GOTO 4890
+				return
+			print(f'You do {n} hit-points of damage')
+			print(" ")
+			delay(2)
+			print(f'It has.. {monster.hm} hit-points left.')
+			print(" ")
+			delay(2)
+	return
 	
+def giantSpider():	# Line 5170
+	monster.name = "Giant Spider"
+	monster.hp = 6
+	monster.hm = 12
+	print("It's a huge man-sized crawling")
+	print("....... SPIDER .......")
+	delay(2)
+	print("...... and ......")
+	doBattle()		# GOTO 4530
+	return
+# End of giantSpider
+
 def emptyChamber():	# Line 2100
 	w=int(rnd()*2+1)
 	if w == 2:	# THEN 2160
@@ -124,21 +238,21 @@ def somethingJumps():	# Line 5290
 # End of somethingJumps
 
 def mrWizard():	# Line 5040
-		print("Halt... I am the Ancient Wizard")
-		print("I will not harm you......")
-		delay(4)
-		print(" ")
-		gold=int(rnd()*300+1)+100
-		player.gold = player.gold + gold
-		print(" ")
-		print(f'I give you... {gold} gold pieces")
-		print("Out of good will and friendship.")
-		print(" ")
-		hp = int(rnd()*10/difficulty+1)+(6/difficulty)
-		player.hp=player.hp+hp
-		print("Also, I will increase...")
-		print(f'your hit-points by {hp}.')
-		delay(2)
+	print("Halt... I am the Ancient Wizard")
+	print("I will not harm you......")
+	delay(4)
+	print(" ")
+	gold=int(rnd()*300+1)+100
+	player.gold = player.gold + gold
+	print(" ")
+	print(f'I give you... {gold} gold pieces')
+	print("Out of good will and friendship.")
+	print(" ")
+	hp = int(rnd()*10/difficulty+1)+(6/difficulty)
+	player.hp=player.hp+hp
+	print("Also, I will increase...")
+	print(f'your hit-points by {hp}.')
+	delay(2)
 	return
 # End of mrWizard()
 
@@ -164,18 +278,18 @@ def findVial():	# Line 4210
 		h=int(rnd()*10/difficulty+1)+(6/difficulty)
 		player.hp = player.hp+h
 		print("It was a white magic potion...")
-		print(f'Which increased your hit-points by {h}
+		print(f'Which increased your hit-points by {h}')
 	elif dl == 2:
 		print("The liquid had no effect on you.")
 	else:
 		h=int(rnd(0)*6+1)*difficulty
 		player.hp = player.hp - h
-		print("You feel a little funny..."
+		print("You feel a little funny...")
 		delay(4)
 		if player.hp <= 0:
 			return
 		print("\nIt was a black magic potion...")
-		print(f'Which decreased your hit-points by {h}."
+		print(f'Which decreased your hit-points by {h}.')
 	return
 # End of findVial
 	
@@ -193,7 +307,7 @@ def hiddenCavern():	# Line 4060
 		print("The cavern seems empty...")
 		return
 	delay(2)
-	pausePrint():	# GOSUB 4500
+	pausePrint()	# GOSUB 4500
 	delay(2)
 	print("But wait... Before you proceed")
 	delay(2)
@@ -204,9 +318,13 @@ def hiddenCavern():	# Line 4060
 	delay(2)
 	w=int(rnd()*4+1)
 	if player.hp > hi and w==1:
-		somethingJumps():	# GOSUB 5290
-		mrWizard():			# GOTO 5040
-		
+		somethingJumps()	# GOSUB 5290
+		mrWizard()			# GOTO 5040
+	elif w==2:
+		somethingJumps()	# GOSUB 5290
+		giantSpider()		# GOTO 5170
+	return
+	
 def showIntro():
 	global difficulty
 	global player
@@ -267,7 +385,7 @@ delay(2)
 
 #	Line 1100 - ON GOSUB
 if aint == 1:
-	emptyChamber():	# to 2100
+	emptyChamber()	# to 2100
 elif aint == 2:	
-	hiddenCavern():	# to 4060
+	hiddenCavern()	# to 4060
 	
