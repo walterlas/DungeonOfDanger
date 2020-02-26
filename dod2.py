@@ -5,11 +5,23 @@ import tools
 from os import system, name
 from time import sleep
 
-player=["name"],[1],[500],[0]
+#player=["name",1,500,0]
+class playerObject:
+	name = 'name'
+	hp = 1
+	gold = 500
+player = playerObject
+
+class monsterObject:
+	name = 'name'
+	hp = 1
+	hm = 1
+monster = monsterObject
+
 difficulty=1
-pname=0
-php=1
-pgold=2
+#pname=0
+#php=1
+#pgold=2
 plevel=3
 
 def delay(seconds):
@@ -46,7 +58,44 @@ def monsterSetup():
 		info[2].append(monsterhm[loop])
 #		print(f'{info[0][loop]} -- {info[1][loop]} -- {info[2][loop]}\n')
 	return(info)
+
+def fillArray(col,row):						#subroutine at 500
+	grid=tools.createGrid(col,row)
+	n=0
+	for y in range(1,col):
+		for x in range(1,row):
+			i=tools.getIndex(x,y,col)
+			grid[i]=int(rnd()*7+1)
+		# next x
+	# next y
+	h=int(rnd()*3+1)
+	for n in range(1,h+1):
+		x=int(rnd()*col)
+		y=int(rnd()*row)
+		i=tools.getIndex(x,y,col)
+		grid[i]=8
+	# next n
+	s=int(rnd()*4+1)+2
+	for n in range(1,s+1):
+		x=int(rnd()*8+1)
+		y=int(rnd()*8+1)
+		i=tools.getIndex(x,y,col)
+		grid[i]=9
+	# next n
+	return(grid)
+# End of fillArray()
+
+def getDifficulty():					#subroutine at 5530
+	print("Difficulty Levels: 1 = Moderate, 2 = Hard")
+	n=input("Enter difficulty level > ")
+	return(int(n))
 	
+# End of getDifficulty
+def getName():
+	n=input("Enter your character's name > ")
+	return(n)
+# End of getName
+
 def showIntro():
 	global difficulty
 	global player
@@ -62,29 +111,46 @@ def showIntro():
 	print("A Fantasy Game")
 	print("=-=-=-=-=-=-=-=--=-=-=-=--=-=-=-=")
 	print("You will be teleported to... The Dungeon of Danger!")
-#	difficulty = getDifficulty()		#gosub 5530
-#	player[0] = getName()
+	difficulty = getDifficulty()		#gosub 5530
+	player.name = getName()
 	delay(2)
 	hi=20+int(rnd()*15+1)
 	hi=int(hi/difficulty)
-	player[1]=int(hi)
-	print("\nYou carry a magic sword and "+str(player[2])+" pieces with you.")
+	player.hp=int(hi)
+	print("\nYou carry a magic sword and "+str(player.gold)+" pieces with you.")
 	print("Your 'hit point' value is...",end='')
 	delay(2)
-	print("..."+str(player[1]),end='\n')
+	print("..."+str(player.hp),end='\n')
 	print("If it reaches zero, you will die... So be careful!")
 	delay(1)
-	print(f'{player[0]}... You are on your way.')
+	print(f'{player.name}... You are on your way.')
 	delay(5)
-	clr()
+	cls()
 	print("You have arrived at...")
 	print("The Dungeon of Danger... Level 2")
 	print(" ")
 	print("You will encounter monsters and thieves and... gold.")
 	print("Good luck!")
-	return
-	
+	return	# GOTO 1030
+
+###### Main Part ######
+## Consider it 1030  ##
 monsterInfo=monsterSetup()
 #print(monsterInfo)
 showIntro()
+a=fillArray(9,9)	# Guessing it's a map?
+b=fillArray(9,9)	# or a grid? 
+c=int(rnd()*8+1)
+d=int(rnd()*8+1)
+location=tools.getIndex(c,d,9)
+a[location]=1
+level=2
+k4=int(rnd()*4+1)+1
+f=" "
+cls()
+if level==1:
+	aint=b[location]
+else:
+	aint=a[location]
+delay(2)
 
