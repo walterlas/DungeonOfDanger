@@ -3,13 +3,26 @@
 from random import random
 import tools
 from os import system, name
+from time import sleep
 
-player=["name"],[0],[500],[0]
+player=["name"],[1],[500],[0]
+difficulty=1
 pname=0
 php=1
 pgold=2
 plevel=3
 
+def delay(seconds):
+	sleep(seconds)
+	return
+
+def cls():
+	if name == 'nt':
+		_ = system('cls')
+	else:
+		_ = system('clear')
+	return
+	
 def rnd():
 	return(random())
 
@@ -34,6 +47,44 @@ def monsterSetup():
 #		print(f'{info[0][loop]} -- {info[1][loop]} -- {info[2][loop]}\n')
 	return(info)
 	
+def showIntro():
+	global difficulty
+	global player
+#	global playerName
+#	global playerHP
+
+	cls()
+	print("The Dungeon of Danger")
+	print("Python 3")
+	print("(c)1980 by Howard Berenbon")
+	print("Converted to Python by me.")
+	print(" ")
+	print("A Fantasy Game")
+	print("=-=-=-=-=-=-=-=--=-=-=-=--=-=-=-=")
+	print("You will be teleported to... The Dungeon of Danger!")
+#	difficulty = getDifficulty()		#gosub 5530
+#	player[0] = getName()
+	delay(2)
+	hi=20+int(rnd()*15+1)
+	hi=int(hi/difficulty)
+	player[1]=int(hi)
+	print("\nYou carry a magic sword and "+str(player[2])+" pieces with you.")
+	print("Your 'hit point' value is...",end='')
+	delay(2)
+	print("..."+str(player[1]),end='\n')
+	print("If it reaches zero, you will die... So be careful!")
+	delay(1)
+	print(f'{player[0]}... You are on your way.')
+	delay(5)
+	clr()
+	print("You have arrived at...")
+	print("The Dungeon of Danger... Level 2")
+	print(" ")
+	print("You will encounter monsters and thieves and... gold.")
+	print("Good luck!")
+	return
+	
 monsterInfo=monsterSetup()
 #print(monsterInfo)
+showIntro()
 
