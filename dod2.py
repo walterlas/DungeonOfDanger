@@ -292,6 +292,47 @@ def findVial():	# Line 4210
 		print(f'Which decreased your hit-points by {h}.')
 	return
 # End of findVial
+def flourish():
+	for aa in range(1,301):
+		print("*        %",end="")
+	delay(2)
+	cls()
+	return
+	
+def playerDead():
+	global dy
+	delay(2)
+	cls()
+	if dy == 1:
+		print(f'{player.name}, you have depleted your moves.')
+	else:
+		print("Your hit-points have been depleted,")
+	player.gold = 0
+	print("And unfortunately... You just died.")
+	delay(3)
+	w = int(rnd()*6+1)
+	if (dy == 0) and (w >= 3):
+		delay(1)
+		dy = 1
+		player.hp = hi
+		flourish()
+	print("You have entered .. a zone")
+	print("between .. Life and Death")
+	print(" ")
+	delay(1)
+	print("I.... The Ancient Wizard")
+	print("will restore your hit-pointes to "+str(hi))
+	print("and .... You have one more")
+	print("chance in the Dungeon.")
+	print(" ")
+	md = int(rnd()*15+1)*ca+10
+	player.hp = hi
+	print(f'You shall have {md} moves.')
+	print("left to find your way out")
+	print("of the Dungeon of Danger.")
+	delay(2)
+	flourish()
+	return
 	
 def hiddenCavern():	# Line 4060
 	print("You stumbled onto .....")
@@ -362,6 +403,77 @@ def showIntro():
 	print("Good luck!")
 	return	# GOTO 1030
 
+def playerAction(): # Lines 1030-1310
+	c = int(rnd()*8+1)
+	d = int(rnd()*8+1)
+	index = tools.getIndex(c,d,9)
+	a[index] = 1
+	level = 2
+	k4 = int(rnd()*4+1)+1
+	f=" "
+	cls()
+	if level == 1:
+		a=b[index]
+	else:
+		inta = a[index]
+	delay(1)
+	if inta == 1:
+		emptyChamber()
+	if inta == 2:
+		hiddenCavern()
+	if (inta == 3) or (inta == 4):
+		occupiedCavern()
+	if inta == 5:
+		thief()
+	if inta == 6:
+		nsCorridor()
+	if inta == 7:
+		ewCorridor()
+	if inta == 8:
+		trapDoor()
+	if inta == 9:
+		upStairway()
+	if te == 1:
+		te = 0 
+		# GOTO 1070 (f$=" " above)
+	print(" ")
+	if player.hp <= 0:
+		playerDead()	# goto 1700
+	if dy == 1:
+		md = md - 1
+	if dy ==1 and md == 0:
+		playerDead()	# goto 1700
+	if f == 'R':
+		pass	# goto 1070 
+	print('{player.name}, what is your action or move?')
+	print(" ")
+	print("(N)orth, (E)ast, (S)outh, (W)est")
+	print("(U)p, (M)ap, (G)old, (H)it Points")
+	m1s = upper(input("> "))
+	m1 = m1 + 1
+	tl = 0
+	c1 = c
+	d1 = d
+	if m1s == 'N':
+		goNorth()
+	if m1s == 'E':
+		goEast()
+	if m1s == 'S':
+		goSouth()
+	if m1s == 'W':
+		goWest()
+	if m1s == 'U':
+		goUpstairs()
+	if m1s == 'M':
+		showMap()
+	if m1s == 'G':
+		checkGold()
+	if m1s == 'H':
+		checkHP()
+	print(" ")
+	# End loop and go back to Koder 399
+	return
+
 ###### Main Part ######
 ## Consider it 1030  ##
 monsterInfo=monsterSetup()
@@ -369,23 +481,78 @@ monsterInfo=monsterSetup()
 showIntro()
 a=fillArray(9,9)	# Guessing it's a map?
 b=fillArray(9,9)	# or a grid? 
-c=int(rnd()*8+1)
-d=int(rnd()*8+1)
-location=tools.getIndex(c,d,9)
-a[location]=1
-level=2
-k4=int(rnd()*4+1)+1
-f=" "
-cls()
-if level==1:
-	aint=b[location]
-else:
-	aint=a[location]
-delay(2)
+c = int(rnd()*8+1)
+d = int(rnd()*8+1)
+index = tools.getIndex(c,d,9)
+a[index] = 1
+level = 2
+k4 = int(rnd()*4+1)+1
+inloop = True
+te = 1
+dy = 1
+md = 1
 
-#	Line 1100 - ON GOSUB
-if aint == 1:
-	emptyChamber()	# to 2100
-elif aint == 2:	
-	hiddenCavern()	# to 4060
+while inloop:
+	f=" "
+	cls()
+	if level == 1:
+		a=b[index]
+	else:
+		inta = a[index]
+	delay(1)
+	if inta == 1:
+		emptyChamber()	# Done
+	if inta == 2:
+		hiddenCavern()	# Done?
+	if (inta == 3) or (inta == 4):
+		occupiedCavern()
+	if inta == 5:
+		thief()
+	if inta == 6:
+		nsCorridor()
+	if inta == 7:
+		ewCorridor()
+	if inta == 8:
+		trapDoor()
+	if inta == 9:
+		upStairway()
+	if te == 1:
+		te = 0 
+		continue	# GOTO 1070 (f$=" " above)
+	print(" ")
+	if player.hp <= 0:
+		playerDead()	# goto 1700
+	if dy == 1:
+		md = md - 1
+		if dy ==1 and md == 0:
+			playerDead()	# goto 1700
+	if f == 'R':
+		continue	# goto 1070 
+	print('{player.name}, what is your action or move?')
+	print(" ")
+	print("(N)orth, (E)ast, (S)outh, (W)est")
+	print("(U)p, (M)ap, (G)old, (H)it Points")
+	m1s = upper(input("> "))
+	m1 = m1 + 1
+	tl = 0
+	c1 = c
+	d1 = d
+	if m1s == 'N':
+		goNorth()
+	if m1s == 'E':
+		goEast()
+	if m1s == 'S':
+		goSouth()
+	if m1s == 'W':
+		goWest()
+	if m1s == 'U':
+		goUpstairs()
+	if m1s == 'M':
+		showMap()
+	if m1s == 'G':
+		checkGold()
+	if m1s == 'H':
+		checkHP()
+	print(" ")
+	# End loop and go back to Koder 399
 	

@@ -1,0 +1,36 @@
+Intro::100 - 160 : gosub 470 (delay)
+Intro::180 - 220: gosub 5530 (Difficulty input)
+Intro::240 - 270: gosub 460 (Delay)
+Intro::280 - 350: gosub 500  (Set up arrays)
+Intro::360 - 450: goto 1030 (??)
+Intro::500 - 730: return to 350
+
+Delay::470 - 490
+
+PlayerAction::1030 - 1100: on gosub 	2100 (empty chamber)
+							4060 (hidden cavern)
+							3580 (occupied chamber)
+							3580 (occupied chamber)
+							2210 (thief)
+							2510 (NS corridor)
+							2560 (EW corridor)
+							2610 (trap door)
+							2870 (up stairway)
+PlayerAction::1110 - 1120: then 1700 (player death)
+PlayerAction:1130 - 1140: then 1700 (player death)
+PlayerAction::1150 - 1220
+PlayerAction::1230: then 1320 (north)
+PlayerAction::1240: then 1360 (east)
+PlayerAction::1250: then 1400 (south)
+PlayerAction::1260: then 1440(west)
+PlayerAction::1270: then 1480 (up)
+PlayerAction::1280: then 1570 (m)
+PlayerAction::1290: then 1600 (g)
+PlayerAction::1300: then 3280 (h)
+PlayerAction:: 1310: goto 1120 (top of PlayerAction)
+
+EmptyChamber:: 2100 - 2200: return to 1100
+playerdeath::1700 - 1700: then 5510
+playerdeath::1710 - 1800: gosub 950
+playerdeath::1810 - 1870:: goto 210
+Difficulty::5530 - 5550
