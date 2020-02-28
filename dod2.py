@@ -1,30 +1,55 @@
 # The Dungeon of Danger (c) 1980
 # Conversion in process
+
+## Imports ##
 from random import random
 import tools
 from os import system, name
 from time import sleep
 
-#player=["name",1,500,0]
+## Classes ##
 class playerObject:
 	name = 'name'
 	hp = 1
 	gold = 500
-player = playerObject
+	turnstaken = 1
+	turnsleft = 10
+	monsterskilled = 0
 
+	def dechp(x):
+		hp = hp - x
+		return
+	def inchp(x):
+		hp = hp + x
+		return
+	def incturn():
+		turnstaken = turnstaken + 1
+		return
+	def decturnleft():
+		turnsleft = turnsleft -1
+		return
+		
 class monsterObject:
 	name = 'name'
 	hp = 1
 	hm = 1
+
+## Variables ##
+player = playerObject
 monster = monsterObject
 
 difficulty=1
-#pname=0
-#php=1
-#pgold=2
 level=3
 haveKey = 0
+newgame = False
+dy = 0
+md = 0
+ma = 0
+ca = 0
+m1 = 0
+hi = 0
 
+## Function Declarations ##
 def delay(seconds):
 	sleep(seconds)
 	return
@@ -292,12 +317,53 @@ def findVial():	# Line 4210
 		print(f'Which decreased your hit-points by {h}.')
 	return
 # End of findVial
+
 def flourish():
 	for aa in range(1,301):
 		print("*        %",end="")
 	delay(2)
 	cls()
 	return
+# End of flourish
+
+def getRating(r):
+	if r <= -400:
+		retrate = "Incompetent serf"
+	elif r <= -100:
+		retrate = "Weakling"
+	elif r < 0:
+		retrate = "Apprentice"
+	elif r < 100:
+		retrate = "Halfling"
+	elif r < 200:
+		retrate = "Foot soldier"
+	elif r < 600:
+		retrate = "Warrior"
+	elif r < 900:
+		retrate = "Great warrior"
+	elif r < 1500:
+		retrate = "Swordsman"
+	elif r < 2500:
+		retrate = "Magic Swordsman"
+	elif r >= 2500:
+		retrate = "Dungeon Master!"
+	return
+#End of getRating
+
+def playerRating():
+	gg = player.gold+100
+	r = int((gg*ca-7000+1)/m1)
+	rating = getRating(r)	# GOSUB 5620
+	print(" ")
+	print(f'Game Rating Is {r} = {rating}')
+	print(" ")
+	if player.gold <=0:
+		print(f'You killed {ca} monsters')	# GOTO 3210
+		print(f'..... in {m1} turns.')
+	print(f'You took {m1} turns to find the way out')
+	print(f'And you killed {ca} monsters.')
+	return
+# End of playerRating
 	
 def playerDead():
 	global dy
@@ -311,29 +377,48 @@ def playerDead():
 	print("And unfortunately... You just died.")
 	delay(3)
 	w = int(rnd()*6+1)
-	if (dy == 0) and (w >= 3):
+	if (dy == 0) and (w >= 3):	# Line 5370
 		delay(1)
 		dy = 1
 		player.hp = hi
 		flourish()
-	print("You have entered .. a zone")
-	print("between .. Life and Death")
-	print(" ")
-	delay(1)
-	print("I.... The Ancient Wizard")
-	print("will restore your hit-pointes to "+str(hi))
-	print("and .... You have one more")
-	print("chance in the Dungeon.")
-	print(" ")
-	md = int(rnd()*15+1)*ca+10
-	player.hp = hi
-	print(f'You shall have {md} moves.')
-	print("left to find your way out")
-	print("of the Dungeon of Danger.")
-	delay(2)
-	flourish()
+		print("You have entered .. a zone")
+		print("between .. Life and Death")
+		print(" ")
+		delay(1)
+		print("I.... The Ancient Wizard")
+		print("will restore your hit-pointes to "+str(hi))
+		print("and .... You have one more")
+		print("chance in the Dungeon.")
+		print(" ")
+		md = int(rnd()*15+1)*ca+10
+		player.hp = hi
+		print(f'You shall have {md} moves.')
+		print("left to find your way out")
+		print("of the Dungeon of Danger.")
+		delay(2)
+		flourish()
+		return
+	else:		# Kube 1710
+		cls()
+		print("You lost all your gold and you were")
+		print("... unable to meet the demands of")
+		print(".....The Dungeon of Danger")
+		print("\n\n")
+		print(" ")
+		print("Better luck next time")
+		playerRating()
+		print(" ")
+		print("Another game?")
+		f=input("Enter (Y)es or (N)o >")
+		if f.upper() == 'Y':
+			newgame = True	# Goto 210
+			cls()
+		else:
+			quit()
 	return
-	
+# End of playerDead	
+
 def hiddenCavern():	# Line 4060
 	print("You stumbled onto .....")
 	print("A hidden cavern")
@@ -369,24 +454,41 @@ def hiddenCavern():	# Line 4060
 def showIntro():
 	global difficulty
 	global player
-#	global playerNameß
-#	global playerHP
-
-	cls()
+	global newgame
+	global dy
+	global md
+	global ma
+	global ca
+	global m1
+	global haveKey
+	global hi
+	
+	if newgame == False:
+		cls()
+		print("The Dungeon of Danger")
+		print("Python 3")
+		print("(c)1980 by Howard Berenbon")
+		print("Converted to Python by me.")
+		print(" ")
+		print("A Fantasy Game")
+		print("=-=-=-=-=-=-=-=--=-=-=-=--=-=-=-=")
+		print("You will be teleported to...")
+		print(" ")
 	print("The Dungeon of Danger")
-	print("Python 3")
-	print("(c)1980 by Howard Berenbon")
-	print("Converted to Python by me.")
 	print(" ")
-	print("A Fantasy Game")
-	print("=-=-=-=-=-=-=-=--=-=-=-=--=-=-=-=")
-	print("You will be teleported to... The Dungeon of Danger!")
+	dy = 0
+	md = 1
 	difficulty = getDifficulty()		#gosub 5530
-	player.name = getName()
-	delay(2)
+	ma = 0
+	ca = 0	# monsters killed
+	player.gold = 500
+	m1 = 1	# turns taken
+	haveKey = 0
 	hi=20+int(rnd()*15+1)
 	hi=int(hi/difficulty)
 	player.hp=int(hi)
+	player.name = getName()
+	delay(2)
 	print("\nYou carry a magic sword and "+str(player.gold)+" pieces with you.")
 	print("Your 'hit point' value is...",end='')
 	delay(2)
@@ -477,7 +579,6 @@ def playerAction(): # Lines 1030-1310
 ###### Main Part ######
 ## Consider it 1030  ##
 monsterInfo=monsterSetup()
-#print(monsterInfo)
 showIntro()
 a=fillArray(9,9)	# Guessing it's a map?
 b=fillArray(9,9)	# or a grid? 
@@ -516,9 +617,9 @@ while inloop:
 		trapDoor()
 	if inta == 9:
 		upStairway()
-	if te == 1:
-		te = 0 
-		continue	# GOTO 1070 (f$=" " above)
+#	if te == 1:
+#		te = 0 
+#		continue	# GOTO 1070 (f$=" " above)
 	print(" ")
 	if player.hp <= 0:
 		playerDead()	# goto 1700
@@ -532,26 +633,26 @@ while inloop:
 	print(" ")
 	print("(N)orth, (E)ast, (S)outh, (W)est")
 	print("(U)p, (M)ap, (G)old, (H)it Points")
-	m1s = upper(input("> "))
+	m1s = input("> ")
 	m1 = m1 + 1
 	tl = 0
 	c1 = c
 	d1 = d
-	if m1s == 'N':
+	if m1s.upper() == 'N':
 		goNorth()
-	if m1s == 'E':
+	if m1s.upper() == 'E':
 		goEast()
-	if m1s == 'S':
+	if m1s.upper() == 'S':
 		goSouth()
-	if m1s == 'W':
+	if m1s.upper() == 'W':
 		goWest()
-	if m1s == 'U':
+	if m1s.upper() == 'U':
 		goUpstairs()
-	if m1s == 'M':
+	if m1s.upper() == 'M':
 		showMap()
-	if m1s == 'G':
+	if m1s.upper == 'G':
 		checkGold()
-	if m1s == 'H':
+	if m1s.upper() == 'H':
 		checkHP()
 	print(" ")
 	# End loop and go back to Koder 399

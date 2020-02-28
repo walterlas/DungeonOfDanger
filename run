@@ -1,0 +1,3 @@
+#!/bin/bash
+python3 dod2.py
+
