@@ -1,27 +1,28 @@
+1700
 a = ?
 b = ?
-playerName = A$
-playerGold = 
-playerHP = H1
-difficulty = PL
-
 A$(50)	= playerName
 D$(1) 	= ?
-F$(1)		= ?
-M1$(1)	= ?
+F$(1)		=  General input
+M1$(1)	= Player movement/action input
 MS$(17)	= monster
 
+A		= ?
+C		= map x coordinate?
+D		= map y coordinate?
 A(9,9)	= ?
 B(9,9)	= ?
-DY		= ?
+DY		=  Moves depleted (see 1700)?
 MD		= ?
-MA		= ?
+MA		= Player has map
 CA		= monstersKilled
 G		= playerGold
 M1		=  turnsTaken
 K		=  haveKey (the enchanted key)
 HI		= temp variable?
 PL		= difficulty
-H1		= playerHP
+H1		= Player HP
+HI		= Initial player HP
 BB		= temp variable for delay loop
-L1		= ? Level maybe? (see line 740 to ?
+L1		= Level maybe? (see line 740 to ?
+TL		= ?
