@@ -26,3 +26,7 @@ HI		= Initial player HP
 BB		= temp variable for delay loop
 L1		= Level maybe? (see line 740 to ?
 TL		= ?
+TE		= ?
+PT		=  Fell into pit
+H,O,W,B,E,R,C,PR	= ??
+

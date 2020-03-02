@@ -17,7 +17,9 @@ class playerObject:
 	turnstaken = 1
 	turnsleft = 10
 	monsterskilled = 0
-	havekey = 0
+	haskey = False
+	hasmap = False
+	movesdepleted = False
 	x = 0
 	y = 0
 
@@ -94,6 +96,100 @@ def monsterSetup():
 		info[2].append(monsterhm[loop])
 	return(info)
 
+def getRating(r):
+	if r <= -400:
+		retrate = "Incompetent serf"
+	elif r <= -100:
+		retrate = "Weakling"
+	elif r < 0:
+		retrate = "Apprentice"
+	elif r < 100:
+		retrate = "Halfling"
+	elif r < 200:
+		retrate = "Foot soldier"
+	elif r < 600:
+		retrate = "Warrior"
+	elif r < 900:
+		retrate = "Great warrior"
+	elif r < 1500:
+		retrate = "Swordsman"
+	elif r < 2500:
+		retrate = "Magic Swordsman"
+	elif r >= 2500:
+		retrate = "Dungeon Master!"
+	return(retrate)
+
+def gameWon():		# Line 890
+	print("You found you way...")
+	print("... Out of the Dungeon of Danger")
+	print(" ")
+	print(f'You have acquired {player.gold} gold pieces.')
+	gg=player.gold + 100
+	r = int ((gg*player.monsterskilled-7000+1)/player.turnstaken)
+	rating = getRating(r)
+	print(f'Game rating is {r} = {rating}')
+	if (player.gold <= 0):
+		print(f'You killed {player.monsterskilled} monsters ')
+		print(f'..... in {player.turnstaken} turns.')
+	else:
+		print(f'You took {player.turnstaken} turns to find the way out')
+		print(f'And killed {player.monsterskilled} monsters.')
+	quit()
+	return
+
+def showMap():		# Line 1570
+	cls()
+	if (player.hasmap == False):
+		print("You don't have the map.")
+		delay(1)
+	else:
+		print("The Dungeon of Danger Map: Level "+str(level))
+		print(" ")
+		for q in range(1,9):
+			for n in range(1,9):
+				if (player.x == n) and (player.y == q):
+					print("Pl  ",end="")
+					continue
+				else:
+					idx = getIndex(n,q,9)
+					s1 = a[idx]
+					if s1 == 1:
+#						pass()		# Line 2910
+						print("O  ",end="")
+					elif s1 == 2:
+#						pass()		# Line 2970
+						print("C  ",end="")
+					elif s1 == 3:
+#						pass()		# Line 2930
+						print("M  ",end="")
+					elif s1 == 4:
+#						pass()		# Line 2930
+						print("M  ",end="")
+					elif s1 == 5:
+#						pass()		# Line 2950
+						print("?  ",end="")
+					elif s1 == 6:
+#						pass()		# Line 2990
+						print("NS  ",end="")
+					elif s1 == 7:
+#						pass()		# Line 3010
+						print("EW  ",end="")
+					elif s1 == 8:
+#						pass()		# Line 3030
+						print("?  ",end="")
+					elif s1 == 9:
+#						pass()		# Line 3040
+						print("UP  ",end="")
+				print(" ")
+			if player.hp <= 0:
+				playerDead()
+			else:
+				if (player.movesdepleted == True):
+					md = md - 1	# don't know what md is
+			if (player.movesdepleted) and (md == 0):
+				playerDead()
+	return
+			
 def goNorth():		# Line 1320
 	global player
 	if inroom != 7:
@@ -132,6 +228,72 @@ def goEast():		# Line 1360
 		print("You are in an North-South Corridor")
 		print("You can only go North or South")
 	return
+
+def goSouth():	# Line 1400
+	if inroom == 7:
+		print("")
+		cls
+		print("You are in an East-West Corridor")
+		print("You can only go East or West")
+	else:
+		if (player.y+1 == 9):
+			cls()
+			print("You are at the South Wall")
+			print("You cannot pass through.")
+			print(" ")
+			print("Try another direction?")
+			return
+		else:
+			player.y = player.y + 1
+	return
+
+def goWest():	# Line 1440
+	if inroom == 6:
+		cls()
+		print("You are in a North-South Corridor")
+		print("You can only go North or South")
+	else:
+		if (player.x - 1) == 0:
+			cls()
+			print("You are at the West wall.")
+			print("You cannot pass through.")
+			print("\nTry another direction?")
+	return
+	
+def goUpstairs():	# Line 1480
+	cls()
+	if (a != 9):
+		print("You are not at a stairway.")
+		delay(1)
+	else:
+		if player.haskey:
+			level = level -1
+			print("You walk up the stairway...")
+			delay(1)
+			print("The Enchanted Key ... Opens the lock")
+			delay(1)
+			if level  == 0:
+				gameWon()
+			else:
+				player.hasmap = False
+				player.haskey = False
+				k4 = int(rnd()*4+1)+1
+				if player.hp < hi:
+					player.hp = hi
+					print("You feel stronger .....")
+					delay(1)
+					print(f'Your hit points are restored to {hi}')
+					print(" ")
+					bmonsterskilled = player.monsterskilled+k4
+					print("You are at..... Level 1")
+					delay(2)
+					return
+		else:
+			print("\nYou cannot go up the stairway.")
+			print("You don't have the key.")
+			delay(1)
+	return
+	
 	
 def emptyChamber():	# Line 2100
 	w=int(rnd()*2+1)
@@ -145,6 +307,148 @@ def emptyChamber():	# Line 2100
 		print("")
 	return
 
+def teleportTrap():		# Line 5560
+	return
+	
+def monsterAttacks():	# Line 4780
+	print(" ")
+	w = int(rnd()*7+1)
+	print(". . . . . . . It attacks you")
+	if (w <= 2):
+		print("But . . . . . . . .  it misses")
+		delay(2)
+	else:
+		w = int(rnd()*6+1)
+		if (w >= 3):
+			n = int(rnd()*hp*difficulty+1)
+		else:
+			n = int(rnd()*hp/level+1)+int(rnd()*player.hp/level+1)
+		if monster.hm <= 2:
+			n = 1
+		player.hp = player.hp - n
+		delay(1)
+		if player.hp <= 0:
+			return
+		else:
+			print(f'And it does {n} hit points of damage')
+			print(" ")
+			print(f'You have . . . {player.hp} hit points left')
+			print(" ")
+			return
+	return
+
+def attackMonster():	# Line 4600
+	cls()
+	delay(1)
+	print(f'You attack the . . . {monster.name}')
+	delay(1)
+	print("With a swing of your sword")
+	n = int(rnd()*5+1)+int(rnd()*player.monsterskilled/2+1)
+	monster.hm = monster.hm - n
+	if monster.hm <= 0:
+		deadMonster()	# GOTO 4890
+	print(f'You do {n} hit points of damage')
+	delay(1)
+	print(f'It has . . {monster.hm} hit points left')
+	delay(1)
+	return
+	
+def flee():		# Line 4700
+	w = int(rnd()*4+1)
+	player.x = player.oldx
+	player.y = player.oldy
+	print("You quickly run out . . .")
+	if tl == 1:
+		teleportTrap()	# GOTO 5560
+	n = int(rnd()*2+1)
+	delay(2)
+	if w >= 3:
+		pass	# GOTO 5330
+	player.hp = player.hp - n
+	print(f'As you leave . . . ')
+	print(f'the {monster.name} attacks')
+	delay(1)
+	if player.hp <= 0:
+		return
+	print(f'And it does {n} hit points of damage')
+	delay(2)
+	return
+	
+def fightOrFlee():
+	print(" ")
+	f = input("Will you (F)ight or (R)un? ")
+	return(f)
+		
+def doBattle():
+	battleloop = True
+	delay(2)
+	print(" ")
+	w = int(rnd(0)*4+1)
+	if (w > 2):
+		delay(1)
+		monsterAttacks()	# GOSUB 4780
+		if player.hp <= 0:
+			return
+	while battleloop:
+		f = fightOrFlee()
+		if f.upper() == 'F':
+			attackMonster()
+		else:
+			flee()
+	return
+	
+def doBattle():		# Line 4530
+	battle = True
+	delay(2)
+	w = int(rnd()*4+1)
+	while battle:
+		if w>2:
+			monsterAttack()	# GOSUB 4780
+			if player.hp <= 0:
+				battle = False
+		print(" ")
+		f=upper(input("Will you (F)ight or (R)un? "))
+		cls()
+		if f == 'F':
+			delay(2)
+			print(f'You attack the... {monster.name}')
+			delay(2)
+			print("With a swing of your sword")
+			n=int(rnd()*5+1)+int(rnd()*ca/2+1)
+			monter.hm = monster.hm - n
+			if monster.hm <= 0:
+				deadMonster()	# GOTO 4890
+				return
+			print(f'You do {n} hit-points of damage')
+			print(" ")
+			delay(2)
+			print(f'It has.. {monster.hm} hit-points left.')
+			print(" ")
+			delay(2)
+	return	
+
+def occupiedCavern():
+	if inroom == 4:
+		w = int(rnd()*15+1)+15
+	else:
+		w = int(rnd()*15+1)
+		
+	print(" ")
+	print("There is something lurking...")
+	print(".... in this chamber ....")
+	delay(1)
+	print("........... Beware")
+	delay(1)
+	print(" ")
+	monster.name = monsterInfo[w][0]
+	monster.hp   = monsterInfo[w][1]
+	monster.hm   = monsterInfo[w][2]
+	print(f'It is a ..... {monster.name} .. ')
+	delay(2)
+	# continue at 4510
+	doBattle()
+	return
+	
 def introTop():
 	cls()
 	print("The Dungeon of Danger")
@@ -257,7 +561,9 @@ while gameloop:
 		elif inroom == 8:
 			trapDoor()
 		elif inroom == 9:
-			upStairway()
+			print("You are at a stairway")
+			print("...... going up")
+			print(" ")
 		if te == 1:
 			te = 0
 	print(" ")
@@ -269,8 +575,12 @@ while gameloop:
 			playerDead()
 	if f.upper() == 'R':
 		continue
+	index = tools.getIndex(player.x,player.y,9)
+	inroom = a[index]
 	print(f'{player.name}, what is your action or move?')
 	print(" ")
+	print(f'Currently at X: {player.x} Y: {player.y}')
+	print(f'Turn #: {player.turnstaken} Inroom = {inroom}')
 	print("(N)orth, (E)ast, (S)outh, (W)est")
 	print("(U)p, (M)ap, (G)old, (H)it Points")
 	pmove = input("> ")
@@ -291,8 +601,10 @@ while gameloop:
 	elif pmove.upper() == 'M':
 		showMap()
 	elif pmove.upper() == 'G':
-		showGold()
+		print(f'You have {player.gold} gold pieces on you.')
 	elif pmove.upper() == 'H':
-		showHP()
+		print(f'You have {player.hp} hit points left')
+	elif pmove.upper() == 'Q':
+		quit()
 	print(" ")
 	te = 1

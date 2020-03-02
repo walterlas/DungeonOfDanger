@@ -534,7 +534,9 @@ def playerAction(): # Lines 1030-1310
 	if inta == 8:
 		trapDoor()
 	if inta == 9:
-		upStairway()
+		print("You are at a stairway")
+		print("...... going up")
+		print(" ")
 	if te == 1:
 		te = 0 
 		# GOTO 1070 (f$=" " above)
