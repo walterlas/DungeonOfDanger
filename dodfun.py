@@ -5,7 +5,7 @@ from os import system, name
 from random import random
 from time import sleep
 
-debug = True
+debug = False
 
 def delay(seconds):
 	if debug == False:

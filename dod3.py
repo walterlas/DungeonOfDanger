@@ -7,7 +7,7 @@ import tools
 from os import system, name
 from time import sleep
 from dodfun import cls,rnd,delay
-debug = True
+debug = False
 
 ## Classes ##
 class playerObject:
@@ -92,9 +92,7 @@ def monsterSetup():
 	monsterName=" "
 	monsterHitPower=0
 	monsterStrength=0
-#	print(f'Monster Length: {len(monster)}')
 	for loop in range(0,34):
-#	for loop in len(monster):
 		info[0].append(monster[loop])
 		info[1].append(monsterhp[loop])
 		info[2].append(monsterhm[loop])
@@ -152,9 +150,9 @@ def findVial():	# Line 4210
 	print("You pick up the vial.. and see that")
 	print("It contains ... a milky liquid.")
 	print("Would you like a drink?")
-	d=upper(input("Enter (Y)es or (N)o:"))
+	d=input("Enter (Y)es or (N)o:")
 	dl=int(rnd()*6+1)
-	if d == 'N':
+	if d.upper() == 'N':
 		return
 	print("\nYou take a drink...")
 	delay(3)
@@ -167,7 +165,7 @@ def findVial():	# Line 4210
 	elif dl == 2:
 		print("The liquid had no effect on you.")
 	else:
-		h=int(rnd(0)*6+1)*difficulty
+		h=int(rnd()*6+1)*difficulty
 		player.hp = player.hp - h
 		print("You feel a little funny...")
 		delay(4)
@@ -225,46 +223,39 @@ def showMap():		# Line 1570
 		for q in range(1,9):
 			for n in range(1,9):
 				if (player.x == n) and (player.y == q):
-					print("Pl  ",end="")
+					print("Pl ",end=" ")
 					continue
 				else:
-					idx = getIndex(n,q,9)
+					idx = tools.getIndex(n,q,9)
 					s1 = a[idx]
 					if s1 == 1:
 #						pass()		# Line 2910
-						print("O  ",end="")
+						print("O  ",end=" ")
 					elif s1 == 2:
 #						pass()		# Line 2970
-						print("C  ",end="")
+						print("C  ",end=" ")
 					elif s1 == 3:
 #						pass()		# Line 2930
-						print("M  ",end="")
+						print("M  ",end=" ")
 					elif s1 == 4:
 #						pass()		# Line 2930
-						print("M  ",end="")
+						print("M  ",end=" ")
 					elif s1 == 5:
 #						pass()		# Line 2950
-						print("?  ",end="")
+						print("?  ",end=" ")
 					elif s1 == 6:
 #						pass()		# Line 2990
-						print("NS  ",end="")
+						print("NS ",end=" ")
 					elif s1 == 7:
 #						pass()		# Line 3010
-						print("EW  ",end="")
+						print("EW ",end=" ")
 					elif s1 == 8:
 #						pass()		# Line 3030
-						print("?  ",end="")
+						print("?  ",end=" ")
 					elif s1 == 9:
 #						pass()		# Line 3040
-						print("UP  ",end="")
-				print(" ")
-			if player.hp <= 0:
-				playerDead()
-			else:
-				if (player.movesdepleted == True):
-					md = md - 1	# don't know what md is
-			if (player.movesdepleted) and (md == 0):
-				playerDead()
+						print("UP ",end=" ")
+			print("\n")
 	return
 
 def nsCorridor():	# Line 1660
@@ -294,10 +285,7 @@ def goNorth():		# Line 1320
 		player.y = player.y - 1
 		return
 	else:
-		print(" ")
-		cls()
-		print("You are in an East-West Corridor")
-		print("You can only go East or West")
+		ewCorridor()
 	return
 
 def goEast():		# Line 1360
@@ -313,18 +301,12 @@ def goEast():		# Line 1360
 		player.x = player.x + 1
 		return
 	else:
-		print(" ")
-		cls()
-		print("You are in an North-South Corridor")
-		print("You can only go North or South")
+		nsCorridor()
 	return
 
 def goSouth():	# Line 1400
 	if inroom == 7:
-		print("")
-		cls
-		print("You are in an East-West Corridor")
-		print("You can only go East or West")
+		ewCorridor()
 	else:
 		if (player.y+1 == 9):
 			cls()
@@ -339,9 +321,7 @@ def goSouth():	# Line 1400
 
 def goWest():	# Line 1440
 	if inroom == 6:
-		cls()
-		print("You are in a North-South Corridor")
-		print("You can only go North or South")
+		nsCorridor()
 	else:
 		if (player.x - 1) == 0:
 			cls()
@@ -416,44 +396,156 @@ def teleportTrap():		# Line 5560
 	delay(2)
 	return
 
+def playerDead():
+	global dy
+	delay(2)
+	cls()
+	if dy == 1:
+		print(f'{player.name}, you have depleted your moves.')
+	else:
+		print("Your hit-points have been depleted,")
+	player.gold = 0
+	print("And unfortunately... You just died.")
+	delay(3)
+	w = int(rnd()*6+1)
+	if (dy == 0) and (w >= 3):	# Line 5370
+		delay(1)
+		dy = 1
+		player.hp = hi
+		flourish()
+		print("You have entered .. a zone")
+		print("between .. Life and Death")
+		print(" ")
+		delay(1)
+		print("I.... The Ancient Wizard")
+		print("will restore your hit-pointes to "+str(hi))
+		print("and .... You have one more")
+		print("chance in the Dungeon.")
+		print(" ")
+		md = int(rnd()*15+1)*ca+10
+		player.hp = hi
+		print(f'You shall have {md} moves.')
+		print("left to find your way out")
+		print("of the Dungeon of Danger.")
+		delay(2)
+		flourish()
+		return
+	else:		# Kube 1710
+		cls()
+		print("You lost all your gold and you were")
+		print("... unable to meet the demands of")
+		print(".....The Dungeon of Danger")
+		print("\n\n")
+		print(" ")
+		print("Better luck next time")
+		gg=player.gold + 100
+		r = int ((gg*player.monsterskilled-7000+1)/player.turnstaken)
+		rating = getRating(r)
+		print(f'Game rating is {r} = {rating}')
+#		playerRating()
+		print(" ")
+		print("Another game?")
+		f=input("Enter (Y)es or (N)o >")
+		if f.upper() == 'Y':
+			newgame = True	# Goto 210
+			cls()
+		else:
+			quit()
+	return
+
+def intoPit():
+	global pitfall
+	global player
+	
+	print("You fell into a deep . . . pit")
+	pitfall = True
+	delay(1)
+	print("Luckily . . you didn't get hurt")
+	print(" ")
+	delay(1)
+	print("But in climbing out . . . ")
+	player.gold = 0
+	print("\nYou . . . . . . lost")
+	print("all of your gold pieces")
+	print(" ")
+	if pitfall:
+		pitfall = False
+		return
+	print("But . . . you still have your key")
+
+def trapDoor():		# Line 2610
+	global level
+	global player
+	
+	print("You activated a . . . trap door")
+	delay(2)
+	trap = int(rnd()*4+1)*difficulty
+	if trap > 4:
+		print("You fell thru . . . ")
+		delay(2)
+		pass		# GOTO 1720
+		playerDead()
+		return
+	elif trap == 4:
+		pass		# GOTO 2690
+		if level == 2:
+			pass	# GOTO 2800
+			intoPit()
+			return
+		level = level + 1
+		print(" ")
+		player.haskey = 1
+		print("You fell thru to level 2 . . . and")
+#		player.gold = 0
+		delay(1)
+		intoPit()
+		return
+	else:
+		print("But . . . you caught yourself")
+		print("from falling")
+		return
+	return
+	
 def getKey():		# Line 3110
-	havekey == True
+	global player
+	player.haskey = True
 	print("\nYou look to the ground......")
 	print("and find the Enchanted Key!")
+	if debug:
+		print(f'Has key is {player.haskey}')
 	delay(2)
 	return
 
 def checkKey():		# Line 3190
 	if player.monsterskilled == cb:
 		getKey()	# GOTO 3110
-	returnn
+	return
 
 def deadMonster():	# Line 4890
-#	printDelay()
 	delay(2)
 	print("")
 	print(f'You have killed the {monster.name}')
 	print("\n")
 	if (inroom < 6) and (inroom != 2):
 		if level == 1:
-			index = getIndex(c,d,9)
+			index = tools.getIndex(player.x,player.y,9)
 			b[index] = 1
 		else:
-			index = getIndex(c,d,9)
+			index = tools.getIndex(player.x,player.y,9)
 			a[index] = 1
 	gold = 500
-	if aint >= 6:
+	if inroom >= 6:
 		gold = 250
 	givegold = int(rnd()*gold/level+1)+75
-	if aint == 2:
+	if inroom == 2:
 		givegold=givegold*2
 	player.gold = player.gold+givegold
 	delay(2)
 	print("You search the area....")
 	delay(2)
 	print(f'and find ... {givegold} gold pieces')
-	ca=ca+1
-	if haveKey != 1:
+	player.monsterskilled = player.monsterskilled + 1
+	if player.haskey != True:
 		if level == 1:
 			checkKey()	# GOTO 3190
 		else:
@@ -479,12 +571,12 @@ def monsterAttacks():	# Line 4780
 		delay(1)
 		if player.hp <= 0:
 			return
-		else:
-			print(f'And it does {n} hit points of damage')
-			print(" ")
-			print(f'You have . . . {player.hp} hit points left')
-			print(" ")
-			return
+#		else:
+		print(f'And it does {n} hit points of damage')
+		print(" ")
+		print(f'You have . . . {player.hp} hit points left')
+		print(" ")
+#			return
 	return
 
 def attackMonster():	# Line 4600
@@ -497,11 +589,12 @@ def attackMonster():	# Line 4600
 	monster.hm = monster.hm - n
 	if monster.hm <= 0:
 		deadMonster()	# GOTO 4890
+		return(monster.hm)
 	print(f'You do {n} hit points of damage')
 	delay(1)
 	print(f'It has . . {monster.hm} hit points left')
 	delay(1)
-	return
+	return(monster.hm)
 	
 def flee():		# Line 4700
 	w = int(rnd()*4+1)
@@ -542,9 +635,15 @@ def doBattle():
 	while battleloop:
 		f = fightOrFlee()
 		if f.upper() == 'F':
-			attackMonster()
+			check = attackMonster()
+			if check <= 0:
+				battleloop = False
+				continue
+			else:	
+				monsterAttacks()
 		else:
 			flee()
+			battleloop = False
 	return
 	
 def doBattle2():		# Line 4530
@@ -601,7 +700,7 @@ def hiddenCavern():	# Line 4060
 	print("Cautiously, you walk towards the sound.")
 	delay(2)
 	w=int(rnd()*4+1)
-	if player.hp > hi and w==1:
+	if player.hp < initialHP and w==1:
 		somethingJumps()	# GOSUB 5290
 		mrWizard()			# GOTO 5040
 	elif w==2:
@@ -716,6 +815,22 @@ def introBottom():
 	print("You will encounter monsters and thieves and... gold.")
 	print("Good luck!")
 	return
+
+def showInfo():	
+	print(f'Currently at X: {player.x} Y: {player.y} Level: {level}')
+	print(f'Turn #: {player.turnstaken} Inroom = {inroom}')
+	print(f'Monsters killed: {player.monsterskilled}')
+	print("Has Map: ",end=" ")
+	if player.hasmap:
+		print("Yes ",end=" ")
+	else:
+		print("No ",end=" ")
+	print("Has Key: ",end=" ")
+	if player.haskey:
+		print("Yes ")
+	else:
+		print("No " + str(player.haskey))
+	return
 	
 ## Variables ##
 player = playerObject
@@ -726,6 +841,7 @@ level=3
 newgame = True
 onload = True
 gameloop = True
+pitfall = False		# originally PT
 
 # Variables that I don't know what they do yet
 tl = 0	# Might be the teleport trap
@@ -767,11 +883,12 @@ while gameloop:
 		initialHP = 20*int(rnd()*15+1)
 		initialHP = (initialHP/difficulty)
 		player.name = getName()
+		player.hp = initialHP
 		delay(2)
 		introBottom()
 		newgame = False
 	while te == 1:
-		cls()
+#		cls()
 		if level == 1:
 			inroom = b[index]
 		else:
@@ -790,7 +907,7 @@ while gameloop:
 		elif inroom == 7:
 			ewCorridor()
 		elif inroom == 8:
-			trapDoor()
+			trapDoor()		# GOTO 2610
 		elif inroom == 9:
 			print("You are at a stairway")
 			print("...... going up")
@@ -810,8 +927,8 @@ while gameloop:
 	inroom = a[index]
 	print(f'{player.name}, what is your action or move?')
 	print(" ")
-	print(f'Currently at X: {player.x} Y: {player.y}')
-	print(f'Turn #: {player.turnstaken} Inroom = {inroom}')
+	if debug:
+		showInfo()
 	print("(N)orth, (E)ast, (S)outh, (W)est")
 	print("(U)p, (M)ap, (G)old, (H)it Points")
 	pmove = input("> ")
