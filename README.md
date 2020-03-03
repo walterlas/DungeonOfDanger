@@ -29,4 +29,14 @@ For instance, I could call goto(1100) and the goto function could do an IF x == 
 It's stupid..... but it may be the way to go. At least until I can get a handle on how
 things are supposed to work. The mystery variables are bad enough.
 
+03/03/2020: OK. It is now basically working. There are probably still a lot of bugs where
+I didn't get the branching correct. In fact, I think there's an entire section I haven't
+even put in yet. I'm not sure how that gets called, but it may not be too hard to figure
+out. Still need to tune the screen clearing and pauses, though. If you're wondering why
+there's a lot of pauses and why there's so many '.' in the text, it's because that's how
+the original is. If I finish the original version, I may branch off and make a "plus" 
+version that will fix all that. Also, I really need to figure out some variables, still.
+It's kind of weird to be this far in and still not know what some do. Like, I think 
+the game ending when you run of turns works, but I haven't the faintest idea of where
+the maximum moves is defined. Go figure.
 
