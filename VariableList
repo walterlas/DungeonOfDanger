@@ -1,6 +1,3 @@
-1700
-a = ?
-b = ?
 A$(50)	= playerName
 D$(1) 	= ?
 F$(1)		=  General input
@@ -8,10 +5,10 @@ M1$(1)	= Player movement/action input
 MS$(17)	= monster
 
 A		= ?
-C		= map x coordinate?
-D		= map y coordinate?
-A(9,9)	= ?
-B(9,9)	= ?
+C		= player x coordinate
+D		= player y coordinate
+A(9,9)	=  Map of Level 2 ?
+B(9,9)	=  Map of Level 1?
 DY		=  Moves depleted (see 1700)?
 MD		= ?
 MA		= Player has map
