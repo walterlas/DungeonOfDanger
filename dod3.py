@@ -22,6 +22,8 @@ class playerObject:
 	movesdepleted = False
 	x = 0
 	y = 0
+	oldx = 0
+	oldy = 0
 
 	def dechp(x):
 		hp = self.hp - x
@@ -82,7 +84,7 @@ def monsterSetup():
 	monster=['Large Dragon','Hideous Ghoul','Lizard Man','Manticore','Purple Worm','Deadly Cobra',
 			'Mad Elf','Clay Man','Hairy Beast','Mad Dwarf','Zombie','Berserker','Giant Scorpion',
 			'Giant Cockroach','Doppleganger','Giant Fire Beetle','Giant Ant','Giant Tick',
-			'Mummy','Nasty Orc','Skeleton','Troll','Gobline','Vampire Bat','Creeping Blob',
+			'Mummy','Nasty Orc','Skeleton','Troll','Goblin','Vampire Bat','Creeping Blob',
 			'Mad Dog','Large Spider','Black Cat','Man Eating Plant','Hydra','Gelatinous Cube',
 			'Giant Centipede','Giant Rat','Shadow']
 	monsterhp=[6,5,4,6,6,5,5,4,5,4,4,5,6,4,5,1,1,2,3,2,1,3,3,3,3,2,3,2,1,3,2,1,2,2]
@@ -90,7 +92,9 @@ def monsterSetup():
 	monsterName=" "
 	monsterHitPower=0
 	monsterStrength=0
+#	print(f'Monster Length: {len(monster)}')
 	for loop in range(0,34):
+#	for loop in len(monster):
 		info[0].append(monster[loop])
 		info[1].append(monsterhp[loop])
 		info[2].append(monsterhm[loop])
@@ -135,6 +139,79 @@ def gameWon():		# Line 890
 		print(f'You took {player.turnstaken} turns to find the way out')
 		print(f'And killed {player.monsterskilled} monsters.')
 	quit()
+	return
+
+def findVial():	# Line 4210
+	print("\nYou look around...")
+	delay(2)
+	v=int(rnd()*7+1)
+	if v < 5:
+		return
+	print("On the ground, at your feet, is a vial.")
+	delay(2)
+	print("You pick up the vial.. and see that")
+	print("It contains ... a milky liquid.")
+	print("Would you like a drink?")
+	d=upper(input("Enter (Y)es or (N)o:"))
+	dl=int(rnd()*6+1)
+	if d == 'N':
+		return
+	print("\nYou take a drink...")
+	delay(3)
+	cls()
+	if dl >= 3:
+		h=int(rnd()*10/difficulty+1)+(6/difficulty)
+		player.hp = player.hp+h
+		print("It was a white magic potion...")
+		print(f'Which increased your hit-points by {h}')
+	elif dl == 2:
+		print("The liquid had no effect on you.")
+	else:
+		h=int(rnd(0)*6+1)*difficulty
+		player.hp = player.hp - h
+		print("You feel a little funny...")
+		delay(4)
+		if player.hp <= 0:
+			return
+		print("\nIt was a black magic potion...")
+		print(f'Which decreased your hit-points by {h}.')
+	return
+
+def somethingJumps():	# Line 5290
+	cls()
+	print("Suddenly... something jumps...")
+	print("in front of you......")
+	delay(2)
+	cls()
+	return
+
+def giantSpider():	# Line 5170
+	monster.name = "Giant Spider"
+	monster.hp = 6
+	monster.hm = 12
+	print("It's a huge man-sized crawling")
+	print("....... SPIDER .......")
+	delay(2)
+	print("...... and ......")
+	doBattle()		# GOTO 4530
+	return
+
+def mrWizard():	# Line 5040
+	print("Halt... I am the Ancient Wizard")
+	print("I will not harm you......")
+	delay(4)
+	print(" ")
+	gold=int(rnd()*300+1)+100
+	player.gold = player.gold + gold
+	print(" ")
+	print(f'I give you... {gold} gold pieces')
+	print("Out of good will and friendship.")
+	print(" ")
+	hp = int(rnd()*10/difficulty+1)+(6/difficulty)
+	player.hp=player.hp+hp
+	print("Also, I will increase...")
+	print(f'your hit-points by {hp}.')
+	delay(2)
 	return
 
 def showMap():		# Line 1570
@@ -189,7 +266,20 @@ def showMap():		# Line 1570
 			if (player.movesdepleted) and (md == 0):
 				playerDead()
 	return
-			
+
+def nsCorridor():	# Line 1660
+	print(" ")
+	cls()
+	print("You are in a North-South corridor")
+	print("You can only go North or South.")
+	return
+
+def ewCorridor():	# Line 1620
+	cls()
+	print("You are in an East-West corridor")
+	print("You can only go East or West")
+	return
+	
 def goNorth():		# Line 1320
 	global player
 	if inroom != 7:
@@ -258,6 +348,8 @@ def goWest():	# Line 1440
 			print("You are at the West wall.")
 			print("You cannot pass through.")
 			print("\nTry another direction?")
+		else:
+			player.x = player.x - 1
 	return
 	
 def goUpstairs():	# Line 1480
@@ -293,7 +385,13 @@ def goUpstairs():	# Line 1480
 			print("You don't have the key.")
 			delay(1)
 	return
-	
+
+def flourish():
+	for aa in range(1,301):
+		print("*        %",end="")
+	delay(2)
+	cls()
+	return
 	
 def emptyChamber():	# Line 2100
 	w=int(rnd()*2+1)
@@ -308,8 +406,60 @@ def emptyChamber():	# Line 2100
 	return
 
 def teleportTrap():		# Line 5560
+	tl = 0
+	delay(2)
+	print("You reactivated the teleportation trap")
+	delay(2)
+	flourish()
+	print("You end up back in the area where")
+	print(". . . You last teleported from")
+	delay(2)
 	return
-	
+
+def getKey():		# Line 3110
+	havekey == True
+	print("\nYou look to the ground......")
+	print("and find the Enchanted Key!")
+	delay(2)
+	return
+
+def checkKey():		# Line 3190
+	if player.monsterskilled == cb:
+		getKey()	# GOTO 3110
+	returnn
+
+def deadMonster():	# Line 4890
+#	printDelay()
+	delay(2)
+	print("")
+	print(f'You have killed the {monster.name}')
+	print("\n")
+	if (inroom < 6) and (inroom != 2):
+		if level == 1:
+			index = getIndex(c,d,9)
+			b[index] = 1
+		else:
+			index = getIndex(c,d,9)
+			a[index] = 1
+	gold = 500
+	if aint >= 6:
+		gold = 250
+	givegold = int(rnd()*gold/level+1)+75
+	if aint == 2:
+		givegold=givegold*2
+	player.gold = player.gold+givegold
+	delay(2)
+	print("You search the area....")
+	delay(2)
+	print(f'and find ... {givegold} gold pieces')
+	ca=ca+1
+	if haveKey != 1:
+		if level == 1:
+			checkKey()	# GOTO 3190
+		else:
+			getKey()	# GOTO 3110
+	return	
+
 def monsterAttacks():	# Line 4780
 	print(" ")
 	w = int(rnd()*7+1)
@@ -320,9 +470,9 @@ def monsterAttacks():	# Line 4780
 	else:
 		w = int(rnd()*6+1)
 		if (w >= 3):
-			n = int(rnd()*hp*difficulty+1)
+			n = int(rnd()*player.hp*difficulty+1)
 		else:
-			n = int(rnd()*hp/level+1)+int(rnd()*player.hp/level+1)
+			n = int(rnd()*player.hp/level+1)+int(rnd()*player.hp/level+1)
 		if monster.hm <= 2:
 			n = 1
 		player.hp = player.hp - n
@@ -383,7 +533,7 @@ def doBattle():
 	battleloop = True
 	delay(2)
 	print(" ")
-	w = int(rnd(0)*4+1)
+	w = int(rnd()*4+1)
 	if (w > 2):
 		delay(1)
 		monsterAttacks()	# GOSUB 4780
@@ -397,7 +547,7 @@ def doBattle():
 			flee()
 	return
 	
-def doBattle():		# Line 4530
+def doBattle2():		# Line 4530
 	battle = True
 	delay(2)
 	w = int(rnd()*4+1)
@@ -407,9 +557,9 @@ def doBattle():		# Line 4530
 			if player.hp <= 0:
 				battle = False
 		print(" ")
-		f=upper(input("Will you (F)ight or (R)un? "))
+		f=input("Will you (F)ight or (R)un? ")
 		cls()
-		if f == 'F':
+		if f.upper() == 'F':
 			delay(2)
 			print(f'You attack the... {monster.name}')
 			delay(2)
@@ -427,6 +577,91 @@ def doBattle():		# Line 4530
 			delay(2)
 	return	
 
+def hiddenCavern():	# Line 4060
+	print("You stumbled onto .....")
+	print("A hidden cavern")
+	delay(2)
+	print(" ")
+	findVial()		# GOSUB 4210
+	if player.hp <= 0:
+		return
+	w=int(rnd()*9+1)
+	delay(3)
+	if w > 3:
+		print("The cavern seems empty...")
+		return
+	delay(2)
+#	pausePrint()	# GOSUB 4500
+	delay(2)
+	print("But wait... Before you proceed")
+	delay(2)
+	print(" ")
+	print("You hear a noise off in the distance")
+	delay(2)
+	print("Cautiously, you walk towards the sound.")
+	delay(2)
+	w=int(rnd()*4+1)
+	if player.hp > hi and w==1:
+		somethingJumps()	# GOSUB 5290
+		mrWizard()			# GOTO 5040
+	elif w==2:
+		somethingJumps()	# GOSUB 5290
+		giantSpider()		# GOTO 5170
+	return
+
+def getMap():
+	print("You search the chamber and")
+	delay(1)
+	print("You. . . . . find a map")
+	return
+
+def thief():
+	cls()
+	print("There is a thief in this chamber")
+	idx=tools.getIndex(player.x,player.y,9)
+	if level ==1:
+		b[idx] = 1
+	else:
+		a[idx] = 1
+	delay(1)
+	g4 = int(rnd()*500/level+1)
+	if (player.gold - g4 < 0):
+		g4 = player.gold
+	y = int(rnd()*8+1)
+	if y <= 3:
+		print(" ")
+		print("You suprised the thief . . . . ")
+		delay(1)
+		print("As he runs out, he drops . . . . ")
+		g4 = int(rnd()*400/level+1)
+		print(f'. . . {g4} gold pieces.')
+		print("You pick up the gold pieces")
+		player.gold = player.gold + g4
+		print(" ")
+		if player.hasmap:
+			return
+		ma = int(rnd()*4+1)
+		if ma <= 2:
+			player.hasmap = True
+		if player.hasmap:
+			getMap()
+			return
+	else:
+		print("\n. . . . . . . . He surprises you")
+		delay(2)
+		print("As he quickly passes by you, he")
+		print(f'snatches . . . {g4} gold pieces.\n')
+		player.gold = player.gold - g4
+		if player.hasmap:
+			return
+		else:
+			ma = int(rnd()*4+1)
+			if ma <= 2:
+				player.hasmap = True
+		if player.hasmap:
+			getMap()
+	return
+	
 def occupiedCavern():
 	if inroom == 4:
 		w = int(rnd()*15+1)+15
@@ -440,9 +675,9 @@ def occupiedCavern():
 	print("........... Beware")
 	delay(1)
 	print(" ")
-	monster.name = monsterInfo[w][0]
-	monster.hp   = monsterInfo[w][1]
-	monster.hm   = monsterInfo[w][2]
+	monster.name = monsterInfo[0][w]
+	monster.hp   = monsterInfo[1][w]
+	monster.hm   = monsterInfo[2][w]
 	print(f'It is a ..... {monster.name} .. ')
 	delay(2)
 	# continue at 4510
@@ -491,14 +726,10 @@ level=3
 newgame = True
 onload = True
 gameloop = True
-#	dy = 0
-#	md = 0
-#	ma = 0
-#	hi = 0	# HP given at game start
-#	te = 1
-#	dy = 1
-#	md = 1
 
+# Variables that I don't know what they do yet
+tl = 0	# Might be the teleport trap
+cb = 0	# I have no idea, but it's related to monsters killed?
 
 ##### Main Game Loop #####
 while gameloop:
@@ -586,8 +817,11 @@ while gameloop:
 	pmove = input("> ")
 	player.incturn()
 	t1 = 0
-	c1 = player.x
-	d1 = player.y
+#	c1 = player.x
+#	d1 = player.y
+	player.oldx = player.x
+	player.oldy = player.y
+	
 	if pmove.upper() == 'N':
 		goNorth()
 	elif pmove.upper() == 'E':
