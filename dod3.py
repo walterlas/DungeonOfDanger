@@ -258,17 +258,64 @@ def showMap():		# Line 1570
 			print("\n")
 	return
 
+def corridor():		# Line 3240
+	print("The door closes and locks behind you")
+	delay(1)
+	w = int(rnd()*8+1)
+	if (w >= 7):
+		# GOTO 3300
+		w = int(rnd()*4+1)+30
+		monster.name = monsterInfo[0][w]
+		monster.hp   = monsterInfo[1][w]
+		monster.hm   = monsterInfo[2][w]
+		print("There is something lurking")
+		print("in this corridor . . .")
+		delay(1)
+		print(" ")
+		print(". . . . . . . . Beware")
+		delay(1)
+		print(" ")
+		print(f'It is a . . . . . {monster.name} . . ')
+		doBattle()
+		return
+	w = int(rnd()*8+1)
+	if (w == 8):
+		# GOTO 3390
+		te = 1
+		tl = 1
+		if player.haskey == 1:
+			print("You activated some sort of trap . . .")
+			delay(1)
+			player.x = int(rnd()*8+1)
+			player.y = int(rnd()*8+1)
+			delay(3)
+			cls()
+			print("Suddenly you feel dizzy, and pass out")
+			print(" ")
+			delay(2)
+			flourish()
+			delay(5)
+			cls()
+			print("When you wake up . . . you find")
+			print("that you were . . . . teleported")
+			print("to an unknown location . . . . ")
+			delay(5)
+			return
+#	return
+	return
+	
 def nsCorridor():	# Line 1660
-	print(" ")
 	cls()
 	print("You are in a North-South corridor")
 	print("You can only go North or South.")
+	corridor()
 	return
 
 def ewCorridor():	# Line 1620
 	cls()
 	print("You are in an East-West corridor")
 	print("You can only go East or West")
+	corridor()
 	return
 	
 def goNorth():		# Line 1320

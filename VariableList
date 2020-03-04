@@ -10,7 +10,7 @@ D		= player y coordinate
 A(9,9)	=  Map of Level 2 ?
 B(9,9)	=  Map of Level 1?
 DY		=  Moves depleted (see 1700)?
-MD		= ?
+MD		= Turns left
 MA		= Player has map
 CA		= monstersKilled
 CB		= ?
@@ -26,5 +26,7 @@ L1		= Level maybe? (see line 740 to ?
 TL		=  Teleport Trap ??
 TE		= ?
 PT		=  Fell into pit
+TR		= ?
+
 H,O,W,B,E,R,C,PR	= ??
 
