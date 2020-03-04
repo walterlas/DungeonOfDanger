@@ -45,6 +45,9 @@ def fillArray(col,row):
 	
 def monsterSetup():
 	info=[[],[],[]]
+	info[0].append(0)
+	info[1].append(0)
+	info[2].append(0)
 	monster=['Large Dragon','Hideous Ghoul','Lizard Man','Manticore','Purple Worm','Deadly Cobra',
 			'Mad Elf','Clay Man','Hairy Beast','Mad Dwarf','Zombie','Berserker','Giant Scorpion',
 			'Giant Cockroach','Doppleganger','Giant Fire Beetle','Giant Ant','Giant Tick',
@@ -134,12 +137,13 @@ def playerDead():
 		dy = 1
 		player.hp = initialHP
 		flourish()
+		print("",end='\n')
 		print("You have entered .. a zone")
 		print("between .. Life and Death")
 		print(" ")
 		delay(1)
 		print("I.... The Ancient Wizard")
-		print("will restore your hit-pointes to "+str(hi))
+		print("will restore your hit-pointes to "+str(initialHP))
 		print("and .... You have one more")
 		print("chance in the Dungeon.")
 		print(" ")
@@ -151,6 +155,7 @@ def playerDead():
 		print("of the Dungeon of Danger.")
 		delay(2)
 		flourish()
+		print("",end='\n')
 		return
 	else:		# Kube 1710
 		cls()
@@ -297,6 +302,7 @@ def doBattle():
 		delay(1)
 		monsterAttacks()	# GOSUB 4780
 		if player.dead:
+			playerDead()
 			return
 	while battleloop:
 		f = fightOrFlee()
@@ -345,6 +351,59 @@ def ewCorridorMsg():	# Line 1620
 #	corridor()
 	return
 
+def intoPit():
+	global pitfall
+	global player
+	
+	print("You fell into a deep . . . pit")
+	pitfall = True
+	delay(1)
+	print("Luckily . . you didn't get hurt")
+	print(" ")
+	delay(1)
+	print("But in climbing out . . . ")
+	player.gold = 0
+	print("\nYou . . . . . . lost")
+	print("all of your gold pieces")
+	print(" ")
+	if pitfall:
+		pitfall = False
+		return
+	print("But . . . you still have your key")
+
+def trapDoor():		# Line 2610
+	global level
+	global player
+	
+	print("You activated a . . . trap door")
+	delay(2)
+	trap = int(rnd()*4+1)*difficulty
+	if trap > 4:
+		print("You fell thru . . . ")
+		delay(2)
+		pass		# GOTO 1720
+		playerDead()
+		return
+	elif trap == 4:
+		pass		# GOTO 2690
+		if level == 2:
+			pass	# GOTO 2800
+			intoPit()
+			return
+		level = level + 1
+		print(" ")
+		player.haskey = 1
+		print("You fell thru to level 2 . . . and")
+#		player.gold = 0
+		delay(1)
+		intoPit()
+		return
+	else:
+		print("But . . . you caught yourself")
+		print("from falling")
+		return
+	return
+
 def goUpstairs():	# Line 1480
 	cls()
 	if (inroom != 9):
@@ -388,8 +447,8 @@ def corridor():		# Line 3240
 	if (w >= 7):
 		# GOTO 3300
 		w = int(rnd()*4+1)+30
-		if w > 34:
-			w = 34
+#		if w >= 34:
+#			w = 33
 		monster.name = monsterInfo[0][w]
 		monster.hp   = monsterInfo[1][w]
 		monster.hm   = monsterInfo[2][w]

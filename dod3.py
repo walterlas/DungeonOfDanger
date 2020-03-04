@@ -81,6 +81,9 @@ def fillArray(col,row):						#subroutine at 500
 	
 def monsterSetup():
 	info=[[],[],[]]
+	info[0].append(0)
+	info[1].append(0)
+	info[2].append(0)
 	monster=['Large Dragon','Hideous Ghoul','Lizard Man','Manticore','Purple Worm','Deadly Cobra',
 			'Mad Elf','Clay Man','Hairy Beast','Mad Dwarf','Zombie','Berserker','Giant Scorpion',
 			'Giant Cockroach','Doppleganger','Giant Fire Beetle','Giant Ant','Giant Tick',
