@@ -52,3 +52,13 @@ don't make sense to me (they aren't very descriptive in the BASIC listing). And,
 searching the PDF for the variables, they don't seem to do anything there, either. So
 they may end up on the cutting room floor, so to speak.
 
+03/05/2020: I am essentially done. I found the problem with the hit points (was a '*' should
+have been a '+'). I added two entire sections that I had skipped over (falling in pools 
+and a Dark Wizard). I haven't come across falling in a pool yet, so I don't know if 
+that works. Actually, I'm not sure the pit thing works, either. The teleport trap seems
+to do its thing, but I need to put something in there to stop Fleeing from combat going
+back to the location you teleported from. I'm not sure that's addressed in the original,
+or I have the logic around teleporting incorrect (would not surprise me). So, while I'm
+technically done, in that all the code has been entered, I am not actually done in
+fixing whatever is currently wrong with it.
+
