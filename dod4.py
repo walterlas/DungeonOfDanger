@@ -1,5 +1,10 @@
-#### The Dungeon of Danger (c) 1980
-####
+####           The Dungeon of Danger                   ####   
+####        (c) 1980 by Howard Berenbon                ####
+#### Transcribed from:                                 ####
+#### Mostly BASIC: Applications for your Atari, Book 2 ####
+#### Published by Howard W. Sams & Co., Inc            ####
+#### Indianapolis, Indiana 1983                        ####
+####             Python Version 1.00                   ####
 
 ## Imports ##
 from random import random
@@ -19,7 +24,8 @@ def getDifficulty():			#Line 5530
 
 def getName():
 	n = input("Enter your character's name > ")
-	return(str(n))
+	o = str(n)
+	return(o)
 
 def fillArray(col,row):
 	grid	= createGrid(col,row)
@@ -89,7 +95,7 @@ def getRating(r):
 	return(retrate)
 
 def gameWon():		# Line 890
-	print("You found you way...")
+	print("You found your way...")
 	print("... Out of the Dungeon of Danger")
 	print(" ")
 	print(f'You have acquired {player.gold} gold pieces.')
@@ -116,7 +122,7 @@ def getContents(c,d):
 
 def flourish():
 	for aa in range(1,301):
-		print("*        %".center(40),end="")
+		print("*        %",end="")
 	delay(2)
 	cls()
 	return
