@@ -40,3 +40,15 @@ It's kind of weird to be this far in and still not know what some do. Like, I th
 the game ending when you run of turns works, but I haven't the faintest idea of where
 the maximum moves is defined. Go figure.
 
+03/04/2020: Every once in a while I like to sort of start over. This means creating a new
+file and then going over the old code and re-implementing it wherever I see that I can
+do things better. Or catch a glaring mistake. It was in doing this (dod4.py), that I 
+realized that dod3.py wasn't going to work correctly. It's kind of amazing it works
+at all. Even still, there are some things that don't seem right to me. For instance,
+the starting hit points can be way higher than they're supposed to be. I may have to
+run the Atari800 emulator and do some experimenting to see what may be going on. Other
+than that, I think I have a handle on things now. Sure, there are still variables that
+don't make sense to me (they aren't very descriptive in the BASIC listing). And, after
+searching the PDF for the variables, they don't seem to do anything there, either. So
+they may end up on the cutting room floor, so to speak.
+

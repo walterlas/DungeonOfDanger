@@ -98,7 +98,7 @@ def getContents(c,d):
 
 def flourish():
 	for aa in range(1,301):
-		print("*        %",end="")
+		print("*        %".center(40),end="")
 	delay(2)
 	cls()
 	return
@@ -148,7 +148,7 @@ def playerDead():
 		print("chance in the Dungeon.")
 		print(" ")
 #		md = int(rnd()*15+1)*ca+10
-		player.turnsleft = int(rnd()*15+1)*monsterskilled+10
+		player.turnsleft = int(rnd()*15+1)*player.monsterskilled+10
 #		player.hp = hi
 		print(f'You shall have {player.turnsleft} moves')
 		print("left to find your way out")
@@ -405,6 +405,9 @@ def trapDoor():		# Line 2610
 	return
 
 def goUpstairs():	# Line 1480
+	global level
+	global player
+	
 	cls()
 	if (inroom != 9):
 		print("You are not at a stairway.")
@@ -814,7 +817,7 @@ while gameloop:
 		if player.movesdepleted:
 			movesDepleted()
 		showCommands()
-		pmove = input("> ")
+		pmove = input("==> ")
 		
 		if pmove.upper()	==	'N':
 			if (player.y - 1 == 0):
