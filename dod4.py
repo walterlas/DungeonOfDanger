@@ -88,6 +88,24 @@ def getRating(r):
 		retrate = "Dungeon Master!"
 	return(retrate)
 
+def gameWon():		# Line 890
+	print("You found you way...")
+	print("... Out of the Dungeon of Danger")
+	print(" ")
+	print(f'You have acquired {player.gold} gold pieces.')
+	gg=player.gold + 100
+	r = int ((gg*player.monsterskilled-7000+1)/player.turnstaken)
+	rating = getRating(r)
+	print(f'Game rating is {r} = {rating}')
+	if (player.gold <= 0):
+		print(f'You killed {player.monsterskilled} monsters ')
+		print(f'..... in {player.turnstaken} turns.')
+	else:
+		print(f'You took {player.turnstaken} turns to find the way out')
+		print(f'And killed {player.monsterskilled} monsters.')
+	quit()
+	return
+
 def getContents(c,d):
 	index = getIndex(c,d,9)
 	if level == 1:
@@ -101,6 +119,62 @@ def flourish():
 		print("*        %".center(40),end="")
 	delay(2)
 	cls()
+	return
+
+def showMap():		# Line 1570 & 1990
+	cls()
+	if (player.hasmap == False):
+		print("You don't have the map.")
+		delay(1)
+	else:
+		print("The Dungeon of Danger Map: Level "+str(level))
+		print(" ")
+		for q in range(1,9):
+			for n in range(1,9):
+				if (player.x == n) and (player.y == q):
+					print("Pl ",end=" ")
+					continue
+				else:
+					idx = getIndex(n,q,9)
+					if level == 1:
+						s1 = level1[idx]
+					else:
+						s1 = level2[idx]
+					if s1 == 1:
+#						pass()		# Line 2910
+						print("O  ",end=" ")
+					elif s1 == 2:
+#						pass()		# Line 2970
+						print("C  ",end=" ")
+					elif s1 == 3:
+#						pass()		# Line 2930
+						print("M  ",end=" ")
+					elif s1 == 4:
+#						pass()		# Line 2930
+						print("M  ",end=" ")
+					elif s1 == 5:
+#						pass()		# Line 2950
+						print("?  ",end=" ")
+					elif s1 == 6:
+#						pass()		# Line 2990
+						print("NS ",end=" ")
+					elif s1 == 7:
+#						pass()		# Line 3010
+						print("EW ",end=" ")
+					elif s1 == 8:
+#						pass()		# Line 3030
+						print("?  ",end=" ")
+					elif s1 == 9:
+#						pass()		# Line 3040
+						print("UP ",end=" ")
+			print("\n")
+	dummy = input("~~Press Enter to Continue~~")
+	return
+
+def getMap():
+	print("You search the chamber and")
+	delay(1)
+	print("You. . . . . find a map")
 	return
 
 def getKey():		# Line 3110
@@ -155,6 +229,7 @@ def playerDead():
 		print("of the Dungeon of Danger.")
 		delay(2)
 		flourish()
+		player.dead = False
 		print("",end='\n')
 		return
 	else:		# Kube 1710
@@ -237,6 +312,7 @@ def monsterAttacks():	# Line 4780
 		delay(1)
 		if player.dead:
 			return
+#			playerDead()
 #		else:
 		print(f'And it does {n} hit points of damage')
 		print(" ")
@@ -278,14 +354,14 @@ def flee():		# Line 4700
 	if w >= 3:
 		pass	# GOTO 5330
 #	player.hp = player.hp - n
-	player.decHP(n)
-	print(f'As you leave . . . ')
-	print(f'the {monster.name} attacks')
-	delay(1)
-	if player.dead:
-		return
-	print(f'And it does {n} hit points of damage')
-	delay(2)
+		player.decHP(n)
+		print(f'As you leave . . . ')
+		print(f'the {monster.name} attacks')
+		delay(1)
+		if player.dead:
+			return
+		print(f'And it does {n} hit points of damage')
+		delay(2)
 	return
 	
 def fightOrFlee():
@@ -302,7 +378,8 @@ def doBattle():
 		delay(1)
 		monsterAttacks()	# GOSUB 4780
 		if player.dead:
-			playerDead()
+#			playerDead()
+			battleloop = False
 			return
 	while battleloop:
 		f = fightOrFlee()
@@ -313,6 +390,10 @@ def doBattle():
 				continue
 			else:	
 				monsterAttacks()
+				if player.dead:
+#					playerDead()
+					battleloop = False
+					return
 		else:
 			flee()
 			battleloop = False
@@ -382,7 +463,8 @@ def trapDoor():		# Line 2610
 		print("You fell thru . . . ")
 		delay(2)
 		pass		# GOTO 1720
-		playerDead()
+#		playerDead()
+		player.dead = True
 		return
 	elif trap == 4:
 		pass		# GOTO 2690
@@ -392,7 +474,7 @@ def trapDoor():		# Line 2610
 			return
 		level = level + 1
 		print(" ")
-		player.haskey = 1
+		player.haskey = True
 		print("You fell thru to level 2 . . . and")
 #		player.gold = 0
 		delay(1)
@@ -578,13 +660,13 @@ def thief():
 		print("You pick up the gold pieces")
 		player.gold = player.gold + g4
 		print(" ")
+		if player.hasmap:
+			return
+		ma = int(rnd()*4+1)
+		if ma <= 2:
+			player.hasmap = True
 #		if player.hasmap:
-#			return
-#		ma = int(rnd()*4+1)
-#		if ma <= 2:
-#			player.hasmap = True
-#		if player.hasmap:
-#			getMap()
+			getMap()
 		return
 	else:
 		print("\n. . . . . . . . He surprises you")
@@ -592,16 +674,67 @@ def thief():
 		print("As he quickly passes by you, he")
 		print(f'snatches . . . {g4} gold pieces.\n')
 		player.gold = player.gold - g4
+		if player.hasmap:
+			return
+		else:
+			ma = int(rnd()*4+1)
+			if ma <= 2:
+				player.hasmap = True
 #		if player.hasmap:
-#			return
-#		else:
-#			ma = int(rnd()*4+1)
-#			if ma <= 2:
-#				player.hasmap = True
-#		if player.hasmap:
-#			getMap()
+				getMap()
 	return
 
+def fallInPool():
+	global monster
+	
+	cls()
+	print("You fall into a deep . . dark")
+	delay(1)
+	print(". . . pool . . of murky water")
+	delay(3)
+	w = int(rnd()*6+1)
+	print(" ")
+	if (w >= 5):
+		# GOTO 5780
+		monster.name = 'Gill Monster'
+		monster.hp	= 8
+		monster.hm	= 14
+		cls()
+		print("The water is . . . icy cold")
+		delay(4)
+		print("Suddenly . . you feel something warm")
+		print(" . . . Rub against your legs . . . .")
+		delay(3)
+		print(" ")
+		print("It then surfaces next to you . . . ")
+		print(" and you see that is is a slimy . . ")
+		print(f'. . . {monster.name} . . ready to attack')
+		delay(2)
+		print()
+		print("As you climb out . . . ")
+		delay(2)
+		doBattle()
+		return
+	elif (w >= 3):
+		# GOTO 5860
+		print("The water is steaming . . . . hot")
+		delay(3)
+		print()
+		print("As you quickly jump out . . . . ")
+		g4 = int(rnd()*500+1)+100
+		if (player.gold - g4) < 0:
+			g4 = player.gold
+		player.gold = player.gold - g4
+		print(f'You drop {g4} gold pieces')
+		print("Which fall into the pool . . lost")
+		delay(3)
+	else:
+		print("It is warm and soothing . . And")
+		delay(2)
+		print("You climb out . . feeling relaxed")
+		print(" ")
+	return
+	
 def giantSpider():	# Line 5170
 	global monster
 	
@@ -634,6 +767,20 @@ def mrWizard():	# Line 5040
 	delay(2)
 	return
 
+def darkWizard():	# Line 5230
+	global monster
+	
+	monster.name	= 'Dark Wizard'
+	monster.hp		= 8
+	monster.hm		= 14
+	cls()
+	print(f"Do not pass . . . I am the {monster.name}")
+	delay(2)
+	print("And I will hack you to pieces . . . ")
+	delay(2)
+	doBattle()
+	return
+	
 def occupiedCavern():
 	if inroom == 4:
 		w = int(rnd()*15+1)+15
@@ -663,7 +810,7 @@ def hiddenCavern():	# Line 4060
 	print(" ")
 	findVial()		# GOSUB 4210
 	if player.dead:
-		return
+		playerDead()
 	w=int(rnd()*9+1)
 	delay(3)
 	if w > 3:
@@ -679,13 +826,27 @@ def hiddenCavern():	# Line 4060
 	delay(2)
 	print("Cautiously, you walk towards the sound.")
 	delay(2)
-	w=int(rnd()*4+1)
-	if player.hp < initialHP and w==1:
-		somethingJumps()	# GOSUB 5290
-		mrWizard()			# GOTO 5040
-	elif w==2:
-		somethingJumps()	# GOSUB 5290
-		giantSpider()		# GOTO 5170
+	w=int(rnd()*4+1)	# Line 4160
+	if initialHP < player.hp:
+		if w == 2:	# GOTO 5170
+			somethingJumps()
+			giantSpider()
+	else:
+		if w == 1:	# GOTO 5040
+			somethingJumps()
+			mrWizard()
+		elif (w == 4) and level == 2:	
+			fallInPool()				# GOTO 5720
+		else:
+			somethingJumps()
+			darkWizard()				# GOTO 5230
+			
+#	if player.hp < initialHP and w==1:
+#		somethingJumps()	# GOSUB 5290
+#		mrWizard()			# GOTO 5040
+#	elif w==2:
+#		somethingJumps()	# GOSUB 5290
+#		giantSpider()		# GOTO 5170
 	return
 	
 def introTop():
@@ -773,9 +934,9 @@ while gameloop:
 		player.haskey			= False
 		player.gold				= 500
 		difficulty				= int(getDifficulty())
-		initialHP				= 20*int(rnd()*15+1)
+		initialHP				= 20+int(rnd()*15+1)
 		initialHP				= initialHP/difficulty
-		targetKills				= int(rnd()*10)+1
+		targetKills				= int(rnd()*4+1)+4
 		player.name				= getName()
 		player.hp				= initialHP
 		delay(2)

@@ -35,5 +35,7 @@ def showGrid(grid,col):
 		print("\n")
 	return
 
-
+def centerText(string,col):
+	numspaces = len(string)-(col/2)
+	
 
