@@ -200,6 +200,7 @@ def checkKey():		# Line 3190
 def playerDead():
 	global dy
 	global player
+	global newgame
 	
 	delay(2)
 	cls()
@@ -211,6 +212,7 @@ def playerDead():
 	print("And unfortunately... You just died.")
 	delay(3)
 	w = int(rnd()*6+1)
+	player.dead = False
 	if (player.movesdepleted == False) and (w >= 3):	# Line 5370
 		delay(1)
 		dy = 1
@@ -234,8 +236,16 @@ def playerDead():
 		print("of the Dungeon of Danger.")
 		delay(2)
 		flourish()
-		player.dead = False
+#		player.dead = False
 		print("",end='\n')
+		print(" ")
+		print("Another game?")
+		f=input("Enter (Y)es or (N)o >")
+		if f.upper() == 'Y':
+			newgame = True	# Goto 210
+			cls()
+		else:
+			quit()
 		return
 	else:		# Kube 1710
 		cls()
