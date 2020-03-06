@@ -124,6 +124,7 @@ def flourish():				# This needs to be re-done
 	for aa in range(1,301):
 		print("*        %",end="")
 	delay(2)
+	print("\n")
 	cls()
 	return
 
@@ -456,8 +457,10 @@ def intoPit():		# Not 100% sure this is all correct
 	if pitfall:
 		pitfall = False
 		return
-	print("But . . . you still have your key")
-
+	if player.haskey:
+		print("But . . . you still have your key")
+	return
+	
 def trapDoor():		# Line 2610		Not sure this is right, either
 	global level
 	global player
@@ -533,48 +536,47 @@ def corridor():		# Line 3240
 	print("The door closes and locks behind you")
 	delay(1)
 	w = int(rnd()*8+1)
-	if (w >= 7):
+	if w >= 7:
 		# GOTO 3300
 		w = int(rnd()*4+1)+30
-#		if w >= 34:
-#			w = 33
-		monster.name = monsterInfo[0][w]
-		monster.hp   = monsterInfo[1][w]
-		monster.hm   = monsterInfo[2][w]
+		monster.name	= monsterInfo[0][w]
+		monster.hp		= monsterInfo[1][w]
+		monster.hm		= monsterInfo[2][w]
 		print("There is something lurking")
-		print("in this corridor . . .")
+		print("In this corridor . . . ")
 		delay(1)
-		print(" ")
-		print(". . . . . . . . Beware")
+		print(". . . . Beware")
 		delay(1)
-		print(" ")
-		print(f'It is a . . . . . {monster.name} . . ')
+		print(f"\nIt is a . . . . . {monster.name} . . ")
+		delay(1)
 		doBattle()
 		return
 	w = int(rnd()*8+1)
-	if (w == 8):
+	if w == 8:
 		# GOTO 3390
-		te = 1
-		tl = 1
-		if player.haskey == 1:
-			print("You activated some sort of trap . . .")
+		if player.haskey == False:
+			player.haskey = True
+			print("\nYou notice a shiny object . . . . ")
+			print(". . . . at your feet")
 			delay(1)
-			player.x = int(rnd()*8+1)
-			player.y = int(rnd()*8+1)
-			delay(3)
-			cls()
-			print("Suddenly you feel dizzy, and pass out")
-			print(" ")
-			delay(2)
-			flourish()
-			delay(5)
-			cls()
-			print("When you wake up . . . you find")
-			print("that you were . . . . teleported")
-			print("to an unknown location . . . . ")
-			delay(5)
-			return
-#	return
+			print("You pick it up and find that . . . ")
+			print("It is the enchanted key . . . . . ")
+			delay(1)
+			print("\nBut you weren't careful . . . . ")
+			delay(1)
+		print("You activated some sort of trap . . . ")
+		delay(1)
+		player.x = int(rnd()*8+1)
+		player.y = int(rnd()*8+1)
+		player.oldx = player.x
+		player.oldy = player.y
+		print("Suddenly you feel dizzy, and pass out")
+		delay(2)
+		flourish()
+		print("When you wake up . . . you find")
+		print("that you were . . . . teleported")
+		print("to an unknown location . . . . ")
+		delay(2)
 	return
 	
 def nsCorridor():	# Line 1660
