@@ -8,7 +8,7 @@
 
 ## Imports ##
 from random import random
-from tools import getIndex, createGrid
+from tools import getIndex, createGrid, showGrid
 from os import system, name
 from time import sleep
 from dodfun import cls, rnd, delay, playerObject, monsterObject
@@ -33,15 +33,18 @@ def fillArray(col,row):
 	for y in range(1,col):
 		for x in range(1,row):
 			i = getIndex(x,y,col)
-			grid[i] = int(rnd()*7+1)
+			grid[i] = int(rnd()*7+1)	# Returns 1-7
 	
-	h	= int(rnd()*3+1)
+	h	= int(rnd()*3+1)				# Returns 1-3
+	
 	for n in range(1,h+1):
 		x	= int(rnd()*col)
 		y	= int(rnd()*row)
 		i	= getIndex(x,y,col)
 		grid[i]	= 8		# Trap doors?
+		
 	s	= int(rnd()*4+1)+2
+
 	for n in range(1,s+1):
 		x	= int(rnd()*8+1)
 		y	= int(rnd()*8+1)
@@ -238,18 +241,18 @@ def playerDead():
 		delay(2)
 		flourish()
 #		player.dead = False
-		print("",end='\n')
-		print(" ")
-		print("Another game?")
-		f=input("Enter (Y)es or (N)o >")
-		if f.upper() == 'Y':
-			newgame = True	# Goto 210
-			cls()
-		else:
-			quit()
-		return
+#		print("",end='\n')
+#		print(" ")
+#		print("Another game?")
+#		f=input("Enter (Y)es or (N)o >")
+#		if f.upper() == 'Y':
+#			newgame = True	# Goto 210
+#			cls()
+#		else:
+#			quit()
+#		return
 	else:		# Kube 1710
-		cls()
+#		cls()
 		print("You lost all your gold and you were")
 		print("... unable to meet the demands of")
 		print(".....The Dungeon of Danger")
@@ -877,12 +880,22 @@ def introBottom():
 	return
 
 def showCommands():
+	print(f"Player X = {player.x}   Player Y = {player.y}  Room Type = {inroom}")
 	print(f'Hit Points: {player.hp}  Gold: {player.gold}')
 	print(f'{player.name}, what is your action or move?')
 	print("(N)orth, (E)ast, (S)outh, (W)est")
 	print("(U)p, (M)ap")
 	return
 
+def showLevels():
+#	print(level1)
+	showGrid(level1,9)
+	print("------------------------------")
+#	print(level2)
+	showGrid(level2,9)
+	print("------------------------------")
+	bummer=input("Press ENTER")
+	return
 	
 ## Known Variables ##
 player	= playerObject
@@ -917,13 +930,13 @@ while gameloop:
 	
 	if (newgame == True):	# Do stuff needed for a new game
 		introMiddle()
-		level2		= fillArray(9,9)
-		level1		= fillArray(9,9)
-		player.x	= int(rnd()*8+1)
-		player.y	= int(rnd()*8+1)
-		index		= getIndex(player.x,player.y,9)
-		level2[index]	= 1
-		level			= 2
+		level2					= fillArray(9,9)
+		level1					= fillArray(9,9)
+		player.x				= int(rnd()*8+1)
+		player.y				= int(rnd()*8+1)
+		index					= getIndex(player.x,player.y,9)
+		level2[index]			= 1
+		level					= 2
 		player.movesdepleted	= False
 		player.movesleft		= 100
 		player.hasmap			= False
@@ -931,87 +944,89 @@ while gameloop:
 		player.gold				= 500
 		difficulty				= int(getDifficulty())
 		initialHP				= 20+int(rnd()*15+1)
-		initialHP				= initialHP/difficulty
+		initialHP				= int(initialHP/difficulty)
 		targetKills				= int(rnd()*4+1)+4
 		player.name				= getName()
 		player.hp				= initialHP
 		delay(2)
 		introBottom()
-		inroom = getContents(player.x,player.y)
+		inroom 					= getContents(player.x,player.y)
 		newgame					= False
-		
-	while te == 1:
-		cls()
-#		index	= getIndex(player.x,player.y,9)
-#		if level == 1:
-#			inroom	= level1[index]
-#		else:
-#			inroom	= level2[index]
-#		delay(1)
-		
-		if		inroom	== 1:
-			emptyChamber()
-		elif	inroom	== 2:
-			hiddenCavern()
-		elif	(inroom	== 3) or (inroom == 4):
-			occupiedCavern()
-		elif	inroom	== 5:
-			thief()
-		elif	inroom	== 6:
-			nsCorridor()
-		elif	inroom	== 7:
-			ewCorridor()
-		elif	inroom	== 8:
-			trapDoor()			# GOTO 2610
-		elif	inroom	== 9:
-			print("You are at a stairway")
-			print(". . . . . . going up")
-		if te == 1:
-			te = 0
-		print(" ")
-		if player.dead:
-			playerDead()
-		if player.movesdepleted:
-			movesDepleted()
-		showCommands()
-		pmove = input("==> ")
-		
-		if pmove.upper()	==	'N':
-			if (player.y - 1 == 0):
-				atWall("North")
-			elif inroom == 7:
-				ewCorridorMsg()
-			else:
-				player.move(player.x,player.y-1)
-		elif pmove.upper()	== 'E':
-			if (player.x  + 1) == 9:
-				atWall("East")
-			elif (inroom == 9):
-				nsCorridorMsg()
-			else:
-				player.move(player.x+1,player.y)
-		elif pmove.upper()	== 'S':
-			if (player.y + 1) == 9:
-				atWall("South")
-			elif (inroom == 7):
-				ewCorridorMsg()
-			else:
-				player.move(player.x,player.y+1)
-		elif pmove.upper()	== 'W':
-			if (player.x - 1) == 0:
-				atWall("West")
-			elif (inroom == 9):
-				nsCorridorMsg()
-			else:
-				player.move(player.x-1,player.y)
-		elif pmove.upper()	== 'U':
-			goUpstairs()
-		elif pmove.upper()	== 'M':
-			showMap()
-		elif pmove.upper()	== 'Q':
-			quit()
-		print(" ")
-		te = 1
-		inroom = getContents(player.x,player.y)
-		player.turnEnd()
-		delay(3)
+#		showLevels()
+#	while te == 1:
+	cls()
+#	print(level2)
+#	bubba = input("Press ENTER")
+	
+	if		inroom	== 1:
+		emptyChamber()
+	elif	inroom	== 2:
+		hiddenCavern()
+	elif	(inroom	== 3) or (inroom == 4):
+		occupiedCavern()
+	elif	inroom	== 5:
+		thief()
+	elif	inroom	== 6:
+		nsCorridor()
+	elif	inroom	== 7:
+		ewCorridor()
+	elif	inroom	== 8:
+		trapDoor()			# GOTO 2610
+	elif	inroom	== 9:
+		print("You are at a stairway")
+		print(". . . . . . going up")
+#	if te == 1:
+#		te = 0
+	print(" ")
+	if player.dead:
+		playerDead()
+		continue
+#	if player.movesdepleted:
+#		movesDepleted()
+#		continue
+	showCommands()
+	pmove = input("==> ")
+	
+	if pmove.upper()	==	'N':
+		if (player.y - 1 == 0):
+			atWall("North")
+		elif inroom == 7:
+			ewCorridorMsg()
+		else:
+			player.move(player.x,player.y-1)
+
+	elif pmove.upper()	== 'E':
+		if (player.x  + 1) == 9:
+			atWall("East")
+		elif (inroom == 6):		# Why was this 9? That's a stair
+			nsCorridorMsg()
+		else:
+			player.move(player.x+1,player.y)
+
+	elif pmove.upper()	== 'S':
+		if (player.y + 1) == 9:
+			atWall("South")
+		elif (inroom == 7):
+			ewCorridorMsg()
+		else:
+			player.move(player.x,player.y+1)
+
+	elif pmove.upper()	== 'W':
+		if (player.x - 1) == 0:
+			atWall("West")
+		elif (inroom == 6):		# Originally 9 for some reason
+			nsCorridorMsg()
+		else:
+			player.move(player.x-1,player.y)
+
+	elif pmove.upper()	== 'U':
+		goUpstairs()
+	elif pmove.upper()	== 'M':
+		showMap()
+	elif pmove.upper()	== 'Q':
+		quit()
+	print(" ")
+#	te = 1
+	inroom = getContents(player.x,player.y)
+	player.turnEnd()
+	delay(3)
