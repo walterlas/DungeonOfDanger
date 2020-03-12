@@ -76,3 +76,80 @@ class monsterObject:
 		if monsterObject.hp <= 0:
 			dead = True
 		return
+
+class levelObject:
+	map		= []
+	mx		= 9
+	my		= 9
+	
+	def createMap(self):
+		for i in range(0,self.mx*self.my):
+			self.map.append(i)
+		return
+	
+	def getIndex(self,x,y):
+		i=x+(self.mx*y)
+		return(i)
+
+	def getX(self,i):
+		x=i%self.mx
+		return(x)
+
+	def getY(self,i):
+		y=i//self.mx
+		return(y)
+
+	def getXY(self,i):
+		x=i%self.mx
+		y=i//self.mx
+		xy=[x,y]
+		return(xy)
+	
+	def showMap(self):
+		index=0
+		for ol in range(0,self.mx):
+			for il in range(0,self.mx):
+				print('{0:2d}'.format(self.map[index]),end=" ")
+				index=index+1
+			print("\n")
+		return
+
+	def roomContents(self,x,y):
+		index = 0
+		index = self.getIndex(x,y)
+		contents = self.map[index]
+		return(contents)
+		
+	def setMap(self,x,y,v):
+		index = self.getIndex(x,y)
+		self.map[index] = v
+		return
+
+	def setMapIdx(self,idx,value)
+		self.map[idx]	= value
+		return
+		
+	def fillMap(self):
+		n	= 0
+		for y in range(1,self.mx):
+			for x in range(1,self.my):
+				i = self.getIndex(x,y)
+				self.map[i] = int(rnd()*7+1)
+		
+		h	= int(rnd()*3+1)
+		
+		for n in range(1,h+1):
+			x	= int(rnd()*self.mx)
+			y	= int(rnd()*self.my)
+			i	= self.getIndex(x,y)
+			self.map[i]	= 8
+		
+		s	= int(rnd()*4+1)+2
+		
+		for n in range(1,s+1):
+			x	= int(rnd()*8+1)
+			y	= int(rnd()*8+1)
+			i	= self.getIndex(x,y)
+			self.map[i]	= 9
+		return
+

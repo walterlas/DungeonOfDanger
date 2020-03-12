@@ -201,6 +201,39 @@ def checkKey():		# Line 3190
 		getKey()	# GOTO 3110
 	return
 
+def teleportTrap():
+	global teleportactive
+	global player
+
+	if teleportactive == False:
+		teleportactive = True
+		print("You activated some sort of trap . . . ")
+		delay(1)
+		teleportx = player.x
+		teleporty = player.y
+		player.x = int(rnd()*8+1)
+		player.y = int(rnd()*8+1)
+		player.oldx = player.x
+		player.oldy = player.y
+		print("Suddenly you feel dizzy, and pass out")
+		delay(2)
+		flourish()
+		print("When you wake up . . . you find")
+		print("that you were . . . . teleported")
+		print("to an unknown location . . . . ")
+		delay(2)
+	else:
+		teleportactive = False
+		print("You reactivated the teleportation trap")
+		delay(1)
+		flourish()
+		delay(1)
+		print("You end up back in the area where")
+		print(". . . you last teleported from")
+		player.x = teleportx
+		player.y = teleporty
+	return
+
 def playerDead():
 	global dy
 	global player
@@ -362,7 +395,7 @@ def flee():		# Line 4700
 	player.x = player.oldx
 	player.y = player.oldy
 	print("You quickly run out . . .")
-	if tl == 1:
+	if teleportactive:	# Use teleportactive = True
 		teleportTrap()	# GOTO 5560
 	n = int(rnd()*2+1)
 	delay(2)
@@ -485,7 +518,7 @@ def trapDoor():		# Line 2610		Not sure this is right, either
 			return
 		level = level + 1
 		print(" ")
-		player.haskey = True
+#		player.haskey = True
 		print("You fell thru to level 2 . . . and")
 		delay(1)
 		intoPit()
@@ -948,6 +981,7 @@ while gameloop:
 		targetKills				= int(rnd()*4+1)+4
 		player.name				= getName()
 		player.hp				= initialHP
+		teleportactive			= False
 		delay(2)
 		introBottom()
 		inroom 					= getContents(player.x,player.y)
